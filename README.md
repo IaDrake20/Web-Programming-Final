@@ -6,29 +6,52 @@ Produce a text based game featuring exploration and combat
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
 Update requirements once we get exactly what he wants, but for now we know he wants us to use 2 servers and a database.
-Encrypt user data when it is transferred between server and user.
+Encrypt user data when it is transferred between server and user. 
 Need authentication method
 
 Ideas
 Database table with classes
 Combine text based commands ("go", find", "open") with button input. Look to early final fantasy, old mmorpg. turn based.
 no art, most is you win or you died.
+save states for game
+webpage that you jump into the game for username input (no password)
 
 Main theme and design
 Bottom in combat has buttins, outside is text. 
 Top has xp bar, wealth/score, name, username, stats
 Use point values for hp, stamina, possibly shift color value with lower values
-Danger level/enviornmental effects.
+Top middle status, chaos level?
 Text changes color when entering combat?
-Use score to level up? 1 life game, every time 
+Use score to level up? 1 life game, every time fight is won increase reputation
+Def use magic. If mage collect books that go to inventory and stat scale. Level is modifier, as player levels up get more skills? %increase/lv or straight level. Capping at level 10? Stats double the base at max. Base + (10 * level). 4 playable characters. Specialization?
+Score and level determine foes
+
+Stats
+Health
+Mana
+Strength -> attack
+Endurance -> stamina, defense
+Dexterity -> ranged physical, dodge chance, assissination
+luck -> critical
+
+class perks(choose specializations)
+mages -> magic damage multiplier 25%
+warriors -> physical damage multiplier 25%
+rogue -> dodge changce buff and x crit boost chance
+
+class promtions?
+
+Option for 1hp boss: Insult or kill?
+
 
 Servers
-1-Entities (event checking)
+1-Entities and event checking and player interaction
 2-Loot
-
-Features
-
 
 backstory
 enter demon king lands, win back lost honor? Suffered yo mama joke?
+
+Loot
+Different ores for weapons
+
 
