@@ -45,8 +45,8 @@ Option for 1hp boss: Insult or kill?
 
 
 Servers
-1-Entities and event checking and player interaction
-2-Loot
+1-Entities and event checking and player interaction. 
+2-Loot. Also holds inventory. Currently takes 2 types of requests, one for loot and the other for information.
 
 backstory
 enter demon king lands, win back lost honor? Suffered yo mama joke?
