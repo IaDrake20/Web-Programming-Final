@@ -1,7 +1,7 @@
 # Web-Programming-Final
 
 Goal
-Produce a text based game featuring exploration and combat
+Produce a text based game featuring exploration and combat on local host.
 
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
