@@ -57,3 +57,7 @@ Loot
 Different ores for weapons
 
 
+Level Progression
+the further you progress the more rewarding the enemies should become, however the more you level up the more demanding it is to level up again.
+
+
