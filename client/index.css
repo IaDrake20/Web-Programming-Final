@@ -1,0 +1,131 @@
+@import url("https://fonts.cdnfonts.com/css/proxima-nova-2");
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* temporary font, doesn't really match feeling of the game */
+* {
+  font-family: "Proxima Nova", sans-serif;
+}
+
+/* wrapper for the whole page, allows middle section to flex-grow */
+#game {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #14141a;
+  color: #ddd;
+}
+
+/* section at the top for stats + more */
+#top {
+  padding: 10px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3c3c3c;
+  height: 70px;
+}
+
+#top div {
+  flex: 1 1 auto;
+}
+
+/* in the top left corner */
+#player-stats {
+  display: flex;
+  gap: 10px;
+}
+
+#player-stats div {
+  flex: 0;
+}
+
+/* center the title */
+#title {
+  display: flex;
+  justify-content: center;
+}
+
+/* push top right section to the right */
+#top-right {
+  display: flex;
+  justify-content: end;
+}
+
+/* text-box in the middle */
+#middle {
+  position: relative;
+  padding: 10px 100px;
+  flex: 1;
+  overflow-y: scroll;
+}
+
+/* gradient at top of text box to show that it scrolls */
+/* sensitive to changes in #top's height */
+/* probably want to disable this when scrolled all the way to the top */
+/* likewise, a duplicate one at bottom when not scrolled all the way down */
+#middle::after {
+  position: fixed;
+  content: "";
+  height: 100px;
+  width: 100%;
+  top: 91px;
+  left: 0;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+
+/* space between lines of text in text-box */
+#middle p {
+  margin: 5px;
+}
+
+/* input area at the bottom */
+#bottom {
+  display: flex;
+  padding: 20px 60px;
+  border-top: 1px solid #3c3c3c;
+}
+
+/* the input element in the bottom section */
+#action-input {
+  width: 100%;
+  flex: 1;
+  background-color: #1d1f2b;
+  border: none;
+  caret-color: #ddd;
+  border-radius: 10px 0 0 10px;
+  padding: 8px 10px;
+  color: #ddd;
+}
+
+/* border when input is focused, default is big ugly blue box */
+#action-input:focus {
+  outline: 1px solid #3c3c3c;
+}
+
+/* outline button when input is focused */
+#action-input:focus-within + #submit-button {
+  outline: 1px solid #3c3c3c;
+}
+
+#submit-button {
+  padding: 10px;
+  background-color: #1d1f2b;
+  color: #ddd;
+  border: none;
+  border-radius: 0 10px 10px 0;
+}
+
+#submit-button:hover {
+  filter: brightness(200%);
+  cursor: pointer;
+}
+
+#submit-button:active {
+  filter: brightness(150%);
+}
