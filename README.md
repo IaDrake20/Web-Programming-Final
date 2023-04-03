@@ -3,6 +3,8 @@
 Goal
 Produce a text based game featuring exploration and combat on local host.
 
+Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (sqlite) should be ready for some loot generation.
+
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
 Update requirements once we get exactly what he wants, but for now we know he wants us to use 2 servers and a database. 
