@@ -10,6 +10,10 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "index.html"));
 });
 
+app.get("/home", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "homepage.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`Main server listening on port ${PORT}`);
 });

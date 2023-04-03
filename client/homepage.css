@@ -1,0 +1,89 @@
+@import url("https://fonts.cdnfonts.com/css/proxima-nova-2");
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* temporary font, doesn't really match feeling of the game */
+* {
+  font-family: "Proxima Nova", sans-serif;
+}
+
+:root {
+  background-color: #14141a;
+}
+
+#home-page {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  color: #ddd;
+}
+
+#header {
+  margin-bottom: 50px;
+}
+
+#username-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#username-div input {
+  flex: 1;
+  background-color: #232634;
+  border: none;
+  caret-color: #ddd;
+  border-radius: 10px;
+  color: #ddd;
+  padding: 10px 10px;
+  /* height: 30px; */
+}
+
+/* border when input is focused, default is big ugly blue box */
+#username-div input:focus {
+  outline: 1px solid #3c3c3c;
+}
+
+#begin-button {
+  padding: 10px;
+}
+
+#loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* position: fixed; */
+  /* bottom: 0; */
+  /* left: 0; */
+  /* right: 0; */
+  height: 50px;
+  /* background-color: rgba(0, 0, 0, 0.4); */
+  /* z-index: 9999; */
+}
+
+#loading-spinner::after {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
