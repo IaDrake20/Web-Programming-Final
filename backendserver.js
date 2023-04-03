@@ -15,10 +15,17 @@ const db_loot = sqlite3.Database(path_lootGen, (err) =>
     console.log('Connected to loot generator database');
 )
 
+//db_loot.get('SELECT * FROM Items ORDER BY RANDOM')
+
 // temp
 app.get("/", (req, res) => {
   res.send("Hello backend server");
 });
+
+const item = {
+    Name: 'default',
+    Value: '0'
+};
 
 app.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
