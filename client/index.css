@@ -38,7 +38,11 @@ body {
 /* in the top left corner */
 #player-stats {
   display: flex;
-  gap: 10px;
+  gap: 20px;
+  flex-direction: row;
+  text-align: center;
+  flex-flow: row;
+  
 }
 
 #player-stats div {
@@ -128,4 +132,21 @@ body {
 
 #submit-button:active {
   filter: brightness(150%);
+}
+
+
+#health{
+  color: red;
+}
+
+#Mana{
+  color: cyan;
+}
+
+#action-points{
+  color: greenyellow;
+}
+
+#xp{
+  color: greenyellow;
 }
