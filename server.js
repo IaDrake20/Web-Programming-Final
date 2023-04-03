@@ -14,4 +14,8 @@ app.listen(PORT, () => {
   console.log(`Main server listening on port ${PORT}`);
 });
 
+//2nd backend server for handling loot and information from database
+const backend = express();
+
+
 // `npm run start` or `node server.js` to run the server
