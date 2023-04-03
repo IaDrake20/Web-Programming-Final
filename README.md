@@ -16,7 +16,7 @@ save states for game
 webpage that you jump into the game for username input (no password)
 
 Main theme and design
-Bottom in combat has buttins, outside is text. 
+Bottom in combat has buttons, outside is text. 
 Top has xp bar, wealth/score, name, username, stats
 Use point values for hp, stamina, possibly shift color value with lower values
 Top middle status, chaos level?
