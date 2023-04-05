@@ -42,7 +42,6 @@ body {
   flex-direction: row;
   text-align: center;
   flex-flow: row;
-  
 }
 
 #player-stats div {
@@ -60,7 +59,7 @@ body {
   justify-content: center;
 }
 
-#chaosLevel{
+#chaosLevel {
   color: red;
 }
 
@@ -143,19 +142,18 @@ body {
   filter: brightness(150%);
 }
 
-
-#health{
+#health {
   color: red;
 }
 
-#Mana{
+#mana {
   color: cyan;
 }
 
-#action-points{
+#action-points {
   color: greenyellow;
 }
 
-#xp{
+#experience {
   color: greenyellow;
 }

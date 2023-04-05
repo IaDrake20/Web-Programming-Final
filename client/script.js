@@ -39,14 +39,32 @@ let player_stats = {
 const healthDiv = document.querySelector("#health");
 healthDiv.innerText = `Health ${player_stats.hp_current}/${player_stats.hp_max}`;
 
-const manaDiv = document.querySelector("#Mana");
+const manaDiv = document.querySelector("#mana");
 manaDiv.innerText = `Mana ${player_stats.mana_current}/${player_stats.mana_max}`;
 
 const actionPointsDiv = document.querySelector("#action-points");
 actionPointsDiv.innerText = `AP ${player_stats.action_points_current}/${player_stats.action_points_max}`;
 
-const experienceDiv = document.querySelector("#xp");
+const experienceDiv = document.querySelector("#experience");
 experienceDiv.innerText = `XP ${player_stats.experience_current}/${player_stats.experience_threshold}`;
+
+const middleDiv = document.querySelector("#middle");
+const actionInput = document.querySelector("#action-input");
+actionInput.addEventListener("keypress", (event) => {
+  // on pressing enter, put message in middleDiv
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const p = document.createElement("p");
+    p.innerText = actionInput.value;
+    middleDiv.appendChild(p);
+
+    // scroll middleDiv down to see the new entry
+    p.scrollIntoView();
+
+    // clear value of middle div
+    actionInput.value = "";
+  }
+});
 
 const levelDiv = document.querySelector("#characterLevel");
 levelDiv.innerText = `Level: ${player_stats.character_level_current}/${player_stats.character_level_max}`;
