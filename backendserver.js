@@ -1,19 +1,11 @@
 const express = require("express");
 const path = require("path");
-const sqlite3 = require("sqlite3");
 
 //path to database
 const path_lootGen = "/db/loot_generator";
 
 const app = express();
 const PORT = 3001;
-
-const db_loot = new sqlite3.Database(path_lootGen, (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log("Connected to loot generator database");
-});
 
 //db_loot.get('SELECT * FROM Items ORDER BY RANDOM')
 
