@@ -49,6 +49,11 @@ body {
   flex: 0;
 }
 
+#characterLevel {
+  padding-top: 30px;
+  color: azure;
+}
+
 /* center the title */
 #title {
   display: flex;

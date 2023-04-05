@@ -12,6 +12,15 @@ let action_points_max = 4;
 let experience_current = 0;
 let experience_threshold = 25;
 
+let character_level_current = 1;
+let character_level_max = 10;
+
+let chaos_level_current = 1;
+let chaos_level_max = 10;
+
+let score = 69;
+
+
 let player_stats = {
   hp_max,
   hp_current,
@@ -21,6 +30,8 @@ let player_stats = {
   action_points_max,
   experience_current,
   experience_threshold,
+  character_level_current,
+  character_level_max
 };
 
 // TODO: querySelect the actual div/p/whatever elements
@@ -36,3 +47,12 @@ actionPointsDiv.innerText = `AP ${player_stats.action_points_current}/${player_s
 
 const experienceDiv = document.querySelector("#xp");
 experienceDiv.innerText = `XP ${player_stats.experience_current}/${player_stats.experience_threshold}`;
+
+const levelDiv = document.querySelector("#characterLevel");
+levelDiv.innerText = `Level: ${player_stats.character_level_current}/${player_stats.character_level_max}`;
+
+const chaos = document.querySelector("#chaosLevel");
+chaos.innerText = `${chaos_level_current}/${chaos_level_max}`;
+
+let scoreDiv = document.querySelector("#Score");
+scoreDiv.innerText = score
