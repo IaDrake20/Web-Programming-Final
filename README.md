@@ -3,7 +3,7 @@
 Goal
 Produce a text based game featuring exploration and combat on local host.
 
-Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (sqlite) should be ready for some loot generation. Need authentication for inividual users, take things in the direction of having multiple users mixed in. Use text inputs for milestone, do buttons after. Build array to hold map. Use ASCII editor? Read easier through ASCII encoding? 
+Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (sqlite) should be ready for some loot generation. Need authentication for inividual users, take things in the direction of having multiple users mixed in. Use text inputs for milestone, do buttons after. Build array to hold map. Use ASCII editor? Read easier through ASCII encoding? Player with highest score leads party, players forced into cooperative party, party leader decides where to go.
 
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
@@ -49,7 +49,7 @@ Option for 1hp boss: Insult or kill?
 Servers
 1-Entities and event checking and player interaction. 
 2-Loot. Also holds inventory. Currently takes 3 types of requests, one for loot, one for enviornment and the other for information. Database will be stored on the client end.
-Use SqLite for database
+Use MongoDB for database
 
 backstory
 enter demon king lands, win back lost honor? Suffered yo mama joke?
