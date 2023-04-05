@@ -26,13 +26,13 @@ let player_stats = {
 // TODO: querySelect the actual div/p/whatever elements
 // TODO: set background of these to a semi-filled in bar that represents the ratio of first : second value.
 const healthDiv = document.querySelector("#health");
-healthDiv.innerText = `${player_stats.hp_current}/${player_stats.hp_max}`;
+healthDiv.innerText = `Health ${player_stats.hp_current}/${player_stats.hp_max}`;
 
-const manaDiv = document.querySelector("#mana");
-manaDiv.innerText = `${player_stats.mana_current}/${player_stats.mana_max}`;
+const manaDiv = document.querySelector("#Mana");
+manaDiv.innerText = `Mana ${player_stats.mana_current}/${player_stats.mana_max}`;
 
-const actionPointsDiv = document.querySelector("#action-points-div");
-actionPointsDiv.innerText = `${player_stats.action_points_current}/${player_stats.action_points_max}`;
+const actionPointsDiv = document.querySelector("#action-points");
+actionPointsDiv.innerText = `AP ${player_stats.action_points_current}/${player_stats.action_points_max}`;
 
-const experienceDiv = document.querySelector("#experience");
-experienceDiv.innerText = `${player_stats.experience_current}/${player_stats.experience_threshold}`;
+const experienceDiv = document.querySelector("#xp");
+experienceDiv.innerText = `XP ${player_stats.experience_current}/${player_stats.experience_threshold}`;

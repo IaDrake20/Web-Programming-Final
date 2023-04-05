@@ -55,6 +55,10 @@ body {
   justify-content: center;
 }
 
+#chaosLevel{
+  color: red;
+}
+
 /* push top right section to the right */
 #top-right {
   display: flex;
