@@ -8,7 +8,7 @@ Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
 Update requirements once we get exactly what he wants, but for now we know he wants us to use 2 servers and a database. 
-Need authentication method
+Need authentication method, need multiple players (express server?) Need to figure out how multiplayer interaction works. Sync Issues with turn based and outside turn based?
 
 Ideas
 Database table with classes
