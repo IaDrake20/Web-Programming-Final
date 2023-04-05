@@ -3,12 +3,12 @@
 Goal
 Produce a text based game featuring exploration and combat on local host.
 
-Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (sqlite) should be ready for some loot generation.
+Milestone Goal: Have 1-2 levels prepped with the warrior class ready. Database (sqlite) should be ready for some loot generation. Need authentication for inividual users, take things in the direction of having multiple users mixed in. Use text inputs for milestone, do buttons after. Build array to hold map. Use ASCII editor? Read easier through ASCII encoding? 
 
 Requirements
 Final project for Dr. Ohl's Web Programming Class. 
 Update requirements once we get exactly what he wants, but for now we know he wants us to use 2 servers and a database. 
-Need authentication method
+Need authentication method, need multiple players (express server?) Need to figure out how multiplayer interaction works. Sync Issues with turn based and outside turn based?
 
 Ideas
 Database table with classes
