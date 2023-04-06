@@ -49,7 +49,7 @@ Option for 1hp boss: Insult or kill?
 Servers
 1-Entities and event checking and player interaction. 
 2-Loot. Also holds inventory. Currently takes 3 types of requests, one for loot, one for enviornment and the other for information. Database will be stored on the client end.
-Use MongoDB for database
+Use MongoDB for database, use number ranges for categories
 
 backstory
 enter demon king lands, win back lost honor? Suffered yo mama joke?
