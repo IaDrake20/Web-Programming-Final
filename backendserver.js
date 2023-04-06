@@ -11,7 +11,7 @@ const pswrd = process.env.DB_PASS;
 console.log(pswrd);
 
 const PORT = 3001;
-const uri = `mongodb+srv://${user}:${pswrd}@cluster0.zpcyqgd.mongodb.net/test`; //need safer way to store password, maybe enviornment or something
+const uri = `mongodb+srv://${user}:${pswrd}@cluster0.zpcyqgd.mongodb.net/test`;
 
 //setup connection to mongodb
 const { MongoClient } = require("mongodb");
@@ -33,6 +33,9 @@ async function main() {
       value: 0,
     });
 
+    //try to retrieve wooden bat
+    console.log(getRandomDBItem(1,2, myCollection));
+
     // get results
     let results = await myCollection.find({}).limit(50).toArray();
     console.log(results);
@@ -53,8 +56,11 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-function getRandomDBItem(min, max){
-   return const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+function getRandomDBItem(min, max, collection){
+   const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+   let element = "id"+randomNum;
+   const query = {id: element}
+   return const myItem = await collection.findOne(query);
 }
 
 app.listen(PORT, () => {
