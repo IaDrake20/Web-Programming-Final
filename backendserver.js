@@ -1,8 +1,12 @@
+//login details
+const user = process.env.USERNAME;
+const pswrd = process.env.PASSWORD;
+
 const express = require("express");
 const path = require("path");
 const app = express();
 const PORT = 3001;
-const uri = "mongodb+srv://B_group:<P4qSHiG7vKUkq5bn>@cluster0.zpcyqgd.mongodb.net/test"; //need safer way to store password, maybe enviornment or something
+const uri = "mongodb+srv://${user}:<${pswrd}>@cluster0.zpcyqgd.mongodb.net/test"; //need safer way to store password, maybe enviornment or something
 
 //setup connection to mongodb
 const { MongoClient} = require('mongodb');
