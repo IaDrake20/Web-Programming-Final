@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/IaDrake20/Web-Programming-Final#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongodb": "^5.2.0"
   }
 }
