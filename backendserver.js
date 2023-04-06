@@ -15,7 +15,7 @@ async function main(){
   const client = new MongoClient(uri);
   try {
     await client.connect();
-    await db_items(client);
+    await db_loot(client);
   } catch(e){
     console.error(e);
   } finally {
