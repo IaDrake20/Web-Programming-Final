@@ -66,6 +66,8 @@ updatePlayerStats();
 const middleDiv = document.querySelector("#middle");
 
 const handleInput = (event) => {
+  event.preventDefault();
+
   if (!actionInput.value) return;
   event.preventDefault();
   const p = document.createElement("p");
@@ -101,6 +103,15 @@ const handleInput = (event) => {
     p.style.color = "yellow";
     if (player_stats.xp_current >= player_stats.xp_threshold)
       player_stats.xp_current = player_stats.xp_threshold;
+  } else if (value === "random item") {
+    fetch("http://localhost:3001/random-item")
+      .then((response) => response.json())
+      .then((data) => {
+        const itemP = document.createElement("p");
+        itemP.innerText = data.Name;
+        itemP.style.color = "violet";
+        middleDiv.appendChild(itemP);
+      });
   }
   updatePlayerStats();
 
