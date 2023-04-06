@@ -6,7 +6,9 @@ const app = express();
 require("dotenv").config();
 //login details
 const user = process.env.DB_USER;
+console.log(user);
 const pswrd = process.env.DB_PASS;
+console.log(pswrd);
 
 const PORT = 3001;
 const uri = `mongodb+srv://${user}:${pswrd}@cluster0.zpcyqgd.mongodb.net/test`; //need safer way to store password, maybe enviornment or something
@@ -26,10 +28,9 @@ async function main() {
 
     // add to database
     myCollection.insertOne({
-      item: "canvas",
-      qty: 100,
-      tags: ["cotton"],
-      size: { h: 28, w: 35.5, uom: "cm" },
+      Name: "wooden bat",
+      id: 0,
+      value: 0,
     });
 
     // get results
@@ -48,10 +49,13 @@ app.get("/", (req, res) => {
   res.send("Hello backend server");
 });
 
-const item = {
-  Name: "default",
-  Value: "0",
-};
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+function getRandomDBItem(min, max){
+   return const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 app.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
