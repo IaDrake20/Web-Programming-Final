@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 78" preserveAspectRatio="none">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #20c100;
+      }
+
+      .cls-2 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-3 {
+        fill: none;
+      }
+
+      .cls-4 {
+        fill: #0f5900;
+      }
+
+      .cls-5 {
+        fill: #137f00;
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect id="Mask" class="cls-3" width="400" height="39"/>
+    </clipPath>
+  </defs>
+  <g id="Action_Points" data-name="Action Points">
+    <g id="AP_Inside" data-name="AP Inside">
+      <g id="Bot_copy_4" data-name="Bot copy 4">
+        <rect class="cls-4" y="9" width="400" height="60" rx="20" ry="20"/>
+      </g>
+      <g id="Top_copy_4" data-name="Top copy 4">
+        <g class="cls-2">
+          <rect class="cls-1" y="9" width="400" height="60" rx="20" ry="20"/>
+        </g>
+      </g>
+      <g id="Mid_copy_4" data-name="Mid copy 4">
+        <rect class="cls-5" y="19" width="400" height="40" rx="20" ry="20"/>
+      </g>
+    </g>
+  </g>
+</svg>

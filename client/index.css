@@ -37,20 +37,76 @@ body {
 
 /* in the top left corner */
 #player-stats {
+  display: grid;
+  grid-template-areas:
+    "hp   ap   level"
+    "mana xp   level";
+  gap: 10px;
+}
+
+#health {
+  grid-area: hp;
+}
+
+#mana {
+  grid-area: mana;
+}
+
+#action-points {
+  grid-area: ap;
+}
+
+#experience {
+  grid-area: xp;
+}
+
+#player-level {
+  padding: 0px 10px;
+  grid-area: level;
   display: flex;
-  gap: 20px;
-  flex-direction: row;
-  text-align: center;
-  flex-flow: row;
+  align-items: center;
+  white-space: nowrap;
 }
 
-#player-stats div {
-  flex: 0;
+/* set bar (svg) size */
+#health,
+#mana,
+#action-points,
+#experience {
+  /* border: 2px solid #000; hacky border radius thing to hide scaled svg overflow */
+  border-radius: 9px;
+  overflow: hidden;
+  position: relative;
+  height: 25px;
+  width: 150px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
 }
 
-#characterLevel {
-  padding-top: 30px;
-  color: azure;
+/* position the bar label */
+#health p,
+#mana p,
+#action-points p,
+#experience p {
+  position: absolute;
+  top: -13px;
+  left: 10px;
+}
+
+/* position the values */
+#health p:nth-child(odd),
+#mana p:nth-child(odd),
+#action-points p:nth-child(odd),
+#experience p:nth-child(odd) {
+  left: 70px;
+}
+
+/* scale ui bar images */
+#player-stats img {
+  position: absolute;
+  top: -3px;
+  width: 150px;
+  height: 30px;
 }
 
 /* center the title */
@@ -59,7 +115,7 @@ body {
   justify-content: center;
 }
 
-#chaosLevel {
+#chaos-level {
   color: red;
 }
 
@@ -75,6 +131,9 @@ body {
   padding: 10px 100px;
   flex: 1;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 }
 
 /* gradient at top of text box to show that it scrolls */
@@ -140,20 +199,4 @@ body {
 
 #submit-button:active {
   filter: brightness(150%);
-}
-
-#health {
-  color: red;
-}
-
-#mana {
-  color: cyan;
-}
-
-#action-points {
-  color: greenyellow;
-}
-
-#experience {
-  color: greenyellow;
 }

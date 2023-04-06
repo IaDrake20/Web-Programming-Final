@@ -12,21 +12,41 @@
     <div id="game">
       <div id="top">
         <div id="player-stats">
-          <div>
-            <p id="health">Health</p>
-            <p id="mana">Mana</p>
+          <div id="health">
+            <img src="./svgs/HP_BG.svg" alt="Health Bar background" />
+            <img id="health-bar" src="./svgs/HP_Inside.svg" alt="Health Bar Fill" />
+            <img src="./svgs/UI_Bar_Border_2.svg" alt="Health Bar Border" />
+            <p>HP:</p>
+            <p id="health-values">100/100</p>
           </div>
-          <div>
-            <p id="action-points">Action Points</p>
-            <p id="experience">Experience</p>
+          <div id="mana">
+            <img src="./svgs/Mana_BG.svg" alt="Mana Bar background" />
+            <img id="mana-bar" src="./svgs/Mana_Inside.svg" alt="Mana Bar Fill" />
+            <img src="./svgs/UI_Bar_Border_2.svg" alt="Mana Bar Border" />
+            <p>Mana:</p>
+            <p id="mana-values">100/100</p>
           </div>
-          <div>
-            <p id="characterLevel">Level</p>
+          <div id="action-points">
+            <img src="./svgs/AP_BG.svg" alt="Action Points Bar background" />
+            <img id="action-points-bar" src="./svgs/AP_Inside.svg" alt="Action Points Bar Fill" />
+            <img src="./svgs/UI_Bar_Border_2.svg" alt="Health Bar Border" />
+            <p>AP:</p>
+            <p id="action-points-values">100/100</p>
+          </div>
+          <div id="experience">
+            <img src="./svgs/XP_BG.svg" alt="Experience Bar background" />
+            <img id="experience-bar" src="./svgs/XP_Inside.svg" alt="Experience Bar Fill" />
+            <img src="./svgs/UI_Bar_Border_2.svg" alt="Health Bar Border" />
+            <p>XP:</p>
+            <p id="experience-values">100/100</p>
+          </div>
+          <div id="player-level">
+            <p>Level</p>
           </div>
         </div>
         <div id="title">
           <h1>Chaos level:</h1>
-          <h1 id="chaosLevel">10</h1>
+          <h1 id="chaos-level">10</h1>
         </div>
         <div id="top-right">
           <p>Score:&nbsp;</p>
@@ -34,42 +54,7 @@
         </div>
       </div>
       <div id="middle">
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
-        <p>Hello world</p>
+        <p>Type hp, mana, ap, or xp to adjust values</p>
       </div>
       <div id="bottom">
         <input id="action-input" type="text" />
