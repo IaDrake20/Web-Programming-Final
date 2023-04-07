@@ -21,24 +21,25 @@ async function main() {
   try {
     await mongo.connect();
     console.log("Connected to mongo!");
-    // const db = mongo.db("db_loot");
+    //const db = mongo.db("db_loot");
 
     // // db_loot
-    // const myCollection = db.collection("db_loot");
+    //const myCollection = db.collection("db_loot");
 
     // add to database
     // myCollection.insertOne({
     //   Name: "wooden bat",
     //   id: 0,
     //   value: 0,
-    // });
+    // }
+
 
     // //try to retrieve wooden bat
     // console.log(getRandomDBItem(1,2, myCollection));
 
     // // get results
-    // let results = await myCollection.find({}).limit(50).toArray();
-    // console.log(results);
+     let results = await myCollection.find({}).limit(50).toArray();
+     console.log(results);
   } catch (e) {
     console.error(e);
   }
@@ -64,7 +65,7 @@ app.use((req, res, next) => {
 // temp: currently only grabs item with id=0
 app.get("/random-item", async (req, res) => {
   const collection = mongo.db("db_loot").collection("db_loot");
-  const item = await getRandomDBItem(0, 0, collection);
+  const item = await getRandomDBItem(1, 7, collection);
   res.json(item);
 });
 
