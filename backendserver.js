@@ -34,7 +34,7 @@ async function main() {
     // }
 
 
-    // //try to retrieve wooden bat
+    // //try to retrieve3
     // console.log(getRandomDBItem(1,2, myCollection));
 
     // // get results
@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 // endpoint to get a random item
-// temp: currently only grabs item with id=0
+// temp: currently only grabs items with ids 0-7
 app.get("/random-item", async (req, res) => {
   const collection = mongo.db("db_loot").collection("db_loot");
   const item = await getRandomDBItem(1, 7, collection);
