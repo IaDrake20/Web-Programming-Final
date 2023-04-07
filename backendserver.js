@@ -38,8 +38,8 @@ async function main() {
     // console.log(getRandomDBItem(1,2, myCollection));
 
     // // get results
-     let results = await myCollection.find({}).limit(50).toArray();
-     console.log(results);
+    //let results = await myCollection.find({}).limit(50).toArray();
+    //console.log(results);
   } catch (e) {
     console.error(e);
   }

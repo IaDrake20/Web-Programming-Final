@@ -7,6 +7,8 @@
     <list default="true" id="58b90d2c-794f-4499-adf7-ec4ff324a787" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backendserver.js" beforeDir="false" afterPath="$PROJECT_DIR$/backendserver.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/client/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loot_generator.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +51,7 @@
       <updated>1680541947777</updated>
       <workItem from="1680541949187" duration="5399000" />
       <workItem from="1680714633041" duration="1052000" />
-      <workItem from="1680761141094" duration="14711000" />
+      <workItem from="1680761141094" duration="15627000" />
     </task>
     <servers />
   </component>
