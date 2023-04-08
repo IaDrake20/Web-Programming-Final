@@ -156,7 +156,7 @@ body {
 }
 
 /* input area at the bottom */
-#bottom {
+#explore {
   display: flex;
   padding: 20px 60px;
   border-top: 1px solid #3c3c3c;
@@ -199,4 +199,10 @@ body {
 
 #submit-button:active {
   filter: brightness(150%);
+}
+
+#combat {
+    display: flex;
+    padding: 20px 60px;
+    border-top: 1px solid #3c3c3c;
 }

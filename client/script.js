@@ -64,6 +64,9 @@ const updatePlayerStats = () => {
 updatePlayerStats();
 
 const middleDiv = document.querySelector("#middle");
+const exploreDiv = document.querySelector("#explore");
+const combatDiv = document.querySelector("#combat");
+
 
 const handleInput = (event) => {
   event.preventDefault();
@@ -112,11 +115,21 @@ const handleInput = (event) => {
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
       });
+  } else if (value === "combat") {
+    p.style.display = "none";
+    exploreDiv.style.display = "none";
+    combatDiv.style.display = "flex";
   }
+
   updatePlayerStats();
 
   middleDiv.appendChild(p);
 };
+
+const backToExplore = (event) => {
+  combatDiv.style.display = "none";
+  exploreDiv.style.display = "flex";
+}
 
 const actionInput = document.querySelector("#action-input");
 actionInput.addEventListener("keypress", (e) => {
@@ -124,6 +137,7 @@ actionInput.addEventListener("keypress", (e) => {
 });
 
 document.querySelector("#submit-button").addEventListener("click", (e) => handleInput(e));
+document.querySelector("#end-button").addEventListener("click", (e) => backToExplore(e));
 
 const levelDiv = document.querySelector("#player-level");
 levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
