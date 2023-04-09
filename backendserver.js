@@ -62,12 +62,43 @@ app.use((req, res, next) => {
 });
 
 // endpoint to get a random item
-// temp: currently only grabs items with ids 0-7
+// temp: currently only grabs items with ids 1-7
 app.get("/random-item", async (req, res) => {
   const collection = mongo.db("db_loot").collection("db_loot");
   const item = await getRandomDBItem(1, 7, collection);
   res.json(item);
 });
+//handle username and password by chekcing the username against the db
+//temp calls of auth-name and auth-pass for now until actual ones established
+app.get("/auth-name", async (req, res) => {
+  console.log(req.url);
+  let name = "qoufqr";
+  authenticateUser(name);
+});
+
+async function authenticateUser(name) {
+  const collection = mongo.db("User_Info").collection("user");
+  const query = {Username: name};
+  const myUser = await collection.findOne(query);
+  console.log(myUser);
+  return myUser;
+}
+/*
+
+// Create WebSocket connection.
+const socket = new WebSocket("ws://localhost:8080");
+
+// Connection opened
+socket.addEventListener("open", (event) => {
+  socket.send("Hello Server!");
+});
+
+// Listen for messages
+socket.addEventListener("message", (event) => {
+  console.log("Message from server ", event.data);
+});
+
+ */
 
 // temp
 app.get("/", (req, res) => {

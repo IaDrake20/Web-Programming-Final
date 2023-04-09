@@ -24,6 +24,14 @@ beginButton.addEventListener("click", () => {
     return;
   }
 
+  //IAN: get user from db
+  url = new URL('ttp://localhost:3001/auth-name');
+  params = {name: username};
+  url.search = new URLSearchParams(params).toString();
+  console.log(url.toString());
+  fetch(url);
+
+
   infoMessagesElement.style.color = GREEN;
   infoMessagesElement.innerText = `Logging in as '${username}'...`;
 
