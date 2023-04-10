@@ -45,6 +45,7 @@ class promtions?
 
 Option for 1hp boss: Insult or kill?
 
+Added consumeables
 
 Servers
 1-Entities and event checking and player interaction. 
@@ -52,7 +53,7 @@ Servers
 Use MongoDB for database, use number ranges for categories
 
 backstory
-enter demon king lands, win back lost honor? Suffered yo mama joke?
+enter demon king lands, win back lost honor? Suffered yo mama joke? Anger demon king, king tries to drag you to throne room immediately. God of chaos tries to drag player(s) to throne room, chaos god reduces it to going to next area instead. Anger demon king by destroying altars. If chaos xp bar is filled special enemy arrives. Win and progress. 
 
 Loot
 Different ores for weapons
