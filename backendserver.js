@@ -93,7 +93,7 @@ async function authenticateUser(name) {
 
 async function addUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
-  collection.insertOne){
+  collection.insertOne({
     Username: name,
     Password: password
   });
