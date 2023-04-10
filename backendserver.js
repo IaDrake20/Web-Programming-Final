@@ -72,9 +72,16 @@ app.get("/random-item", async (req, res) => {
 //temp calls of auth-name and auth-pass for now until actual ones established
 app.get("/auth-name", async (req, res) => {
   console.log(req.url);
-  let name = "qoufqr";
-  authenticateUser(name);
+  let name = req.body;
+  console.log(req.body);
+  const foo = authenticateUser(name); //can't think of a name for var
+  if(foo.equals("undefined") || foo.equals(null)){
+    addUser(name, "test");
+  }
+
 });
+
+//make new
 
 async function authenticateUser(name) {
   const collection = mongo.db("User_Info").collection("user");
@@ -82,6 +89,14 @@ async function authenticateUser(name) {
   const myUser = await collection.findOne(query);
   console.log(myUser);
   return myUser;
+}
+
+async function addUser(name, password) {
+  const collection = mongo.db("User_Info").collection("user");
+  collection.insertOne){
+    Username: name,
+    Password: password
+  });
 }
 /*
 
