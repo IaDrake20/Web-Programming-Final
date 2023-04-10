@@ -59,3 +59,6 @@ Loot
 Different ores for weapons
 
 
+Map
+Not using map, generating stuff on the fly.
+
