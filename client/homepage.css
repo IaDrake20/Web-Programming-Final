@@ -28,19 +28,14 @@ body {
   margin-bottom: 50px;
 }
 
-#username-div {
+#username-div, #userpassword-div {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-#userpassword-div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-#username-div input {
+#username-div input, #userpassword-input {
   flex: 1;
   background-color: #232634;
   border: none;
