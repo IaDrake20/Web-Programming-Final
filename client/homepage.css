@@ -34,6 +34,12 @@ body {
   gap: 10px;
 }
 
+#userpassword-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 #username-div input {
   flex: 1;
   background-color: #232634;
