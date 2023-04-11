@@ -117,8 +117,7 @@ const handleInput = (event) => {
       });
   } else if (value === "combat") {
     p.style.display = "none";
-    exploreDiv.style.display = "none";
-    combatDiv.style.display = "flex";
+    Combat();
   }
 
   updatePlayerStats();
@@ -126,7 +125,12 @@ const handleInput = (event) => {
   middleDiv.appendChild(p);
 };
 
-const backToExplore = (event) => {
+const Combat = () => {
+  exploreDiv.style.display = "none";
+  combatDiv.style.display = "flex";
+}
+
+const Explore = (event) => {
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
 }
@@ -137,7 +141,9 @@ actionInput.addEventListener("keypress", (e) => {
 });
 
 document.querySelector("#submit-button").addEventListener("click", (e) => handleInput(e));
-document.querySelector("#end-button").addEventListener("click", (e) => backToExplore(e));
+document.querySelector("#end-button").addEventListener("click", (e) => Explore(e));
+
+
 
 const levelDiv = document.querySelector("#player-level");
 levelDiv.innerText = `Level: ${player_stats.character_level_current}`;

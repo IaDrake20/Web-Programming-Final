@@ -165,7 +165,7 @@ body {
 /* the input element in the bottom section */
 #action-input {
   width: 100%;
-  flex: 1;
+  flex: 2;
   background-color: #1d1f2b;
   border: none;
   caret-color: #ddd;
@@ -185,24 +185,47 @@ body {
 }
 
 #submit-button {
+    flex: none;
+}
+
+button {
   padding: 10px;
+  flex: 1;
   background-color: #1d1f2b;
   color: #ddd;
   border: none;
   border-radius: 0 10px 10px 0;
 }
 
-#submit-button:hover {
+button:hover {
   filter: brightness(200%);
   cursor: pointer;
 }
 
-#submit-button:active {
+button:active {
   filter: brightness(150%);
 }
 
+details {
+    padding: 10px;
+    flex: 1;
+    background-color: #1d1f2b;
+    color: #ddd;
+    border: none;
+    border-radius: 0 10px 10px 0;
+}
+
+details:hover {
+    filter: brightness(200%);
+    cursor: pointer;
+}
+
+details:active {
+    filter: brightness(150%);
+}
 #combat {
     display: flex;
     padding: 20px 60px;
     border-top: 1px solid #3c3c3c;
 }
+
