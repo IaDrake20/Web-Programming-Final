@@ -3,13 +3,13 @@ console.log("Hello world");
 const homePage = document.querySelector("#home-page");
 const beginButton = document.querySelector("#begin-button");
 const usernameInput = document.querySelector("#username-input");
-const userpasswordInput = document.querySelector("userpassword-input");
+const userPasswordInput = document.querySelector("#userpassword-input");
 const infoMessagesElement = document.querySelector("#info-messages-element");
 
 const GREEN = "#32CD32"; //bright green color
 const RED = "#B22222";
 
-beginButton.addEventListener("click", () => {
+beginButton.addEventListener("click", async () => {
   const username = usernameInput.value;
   const userpassword = userPasswordInput.value;
 
@@ -27,12 +27,21 @@ beginButton.addEventListener("click", () => {
   }
 
   //IAN: get user from db
-  url = new URL('ttp://localhost:3001/auth-name');
-  params = {name: username, password: userpassword };
-  url.search = new URLSearchParams(params).toString();
-  console.log(url.toString());
-  fetch(url);
+  // url = new URL("http://localhost:3001/auth-name");
+  // params = { name: username, password: userpassword };
+  // url.search = new URLSearchParams(params).toString();
+  // console.log(url.toString());
+  // fetch(url);
 
+  console.log(username);
+  await fetch(`http://localhost:3001/auth-name`, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify({ name: username, pass: userpassword }),
+  });
 
   infoMessagesElement.style.color = GREEN;
   infoMessagesElement.innerText = `Logging in as '${username}'...`;

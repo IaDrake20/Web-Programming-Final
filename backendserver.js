@@ -33,7 +33,6 @@ async function main() {
     //   value: 0,
     // }
 
-
     // //try to retrieve3
     // console.log(getRandomDBItem(1,2, myCollection));
 
@@ -54,6 +53,9 @@ async function getRandomDBItem(min, max, collection) {
   return myItem;
 }
 
+// allow parsing json body from POST requests (auth)
+app.use(express.json());
+
 // fix CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -70,22 +72,27 @@ app.get("/random-item", async (req, res) => {
 });
 //handle username and password by chekcing the username against the db
 //temp calls of auth-name and auth-pass for now until actual ones established
-app.get("/auth-user", async (req, res) => {
+app.post("/auth-name", async (req, res) => {
   console.log(req.url);
-  let {name, password} = req.body;
-  console.log(req.body);
-  const foo = authenticateUser(name); //can't think of a name for var
-  if(foo.equals("undefined") || foo.equals(null)){
-    addUser(name, password);
+  let name = req.body.name;
+  let pass = req.body.pass;
+  console.log(name);
+  console.log(pass);
+  const exists = await authenticateUser(name, pass);
+  if (!exists) {
+    console.log("user does not exist... adding to db");
+    addUser(name, pass);
+  } else {
+    console.log("user exists");
   }
-
+  res.end();
 });
 
 //make new
 
-async function authenticateUser(name) {
+async function authenticateUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
-  const query = {Username: name, Userpassword: password};
+  const query = { Username: name, Password: password };
   const myUser = await collection.findOne(query);
   console.log(myUser);
   return myUser;
@@ -93,10 +100,11 @@ async function authenticateUser(name) {
 
 async function addUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
-  collection.insertOne({
+  await collection.insertOne({
     Username: name,
-    Password: password
+    Password: password,
   });
+  console.log("user added to db");
 }
 /*
 
