@@ -67,7 +67,7 @@ app.use((req, res, next) => {
 // temp: currently only grabs items with ids 1-7
 app.get("/random-item", async (req, res) => {
   const collection = mongo.db("db_loot").collection("Consumables");
-  const item = await getRandomDBItem(1, 7, collection);
+  const item = await getRandomDBItem(1, 2, collection);
   res.json(item);
 });
 //handle username and password by chekcing the username against the db

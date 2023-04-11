@@ -111,7 +111,7 @@ const handleInput = (event) => {
       .then((response) => response.json())
       .then((data) => {
         const itemP = document.createElement("p");
-        itemP.innerText = data.Name;
+        itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
       });
