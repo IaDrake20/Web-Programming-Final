@@ -28,14 +28,15 @@ body {
   margin-bottom: 50px;
 }
 
-#username-div, #userpassword-div {
+#username-div,
+#userpassword-div {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-
-#username-div input, #userpassword-input {
+#username-div input,
+#userpassword-input {
   flex: 1;
   background-color: #232634;
   border: none;
@@ -47,7 +48,8 @@ body {
 }
 
 /* border when input is focused, default is big ugly blue box */
-#username-div input:focus {
+#username-input:focus,
+#userpassword-input:focus {
   outline: 1px solid #3c3c3c;
 }
 
