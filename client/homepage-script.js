@@ -3,6 +3,7 @@ console.log("Hello world");
 const homePage = document.querySelector("#home-page");
 const beginButton = document.querySelector("#begin-button");
 const usernameInput = document.querySelector("#username-input");
+const userpasswordInput = document.querySelector("userpassword-input");
 const infoMessagesElement = document.querySelector("#info-messages-element");
 
 const GREEN = "#32CD32"; //bright green color
@@ -10,6 +11,7 @@ const RED = "#B22222";
 
 beginButton.addEventListener("click", () => {
   const username = usernameInput.value;
+  const userpassword = userPasswordInput.value;
 
   // validate username (must exist, must be between 3-16 chars)
   // if username invalid, add text to an error message below the button
@@ -26,7 +28,7 @@ beginButton.addEventListener("click", () => {
 
   //IAN: get user from db
   url = new URL('ttp://localhost:3001/auth-name');
-  params = {name: username};
+  params = {name: username, password: userpassword };
   url.search = new URLSearchParams(params).toString();
   console.log(url.toString());
   fetch(url);

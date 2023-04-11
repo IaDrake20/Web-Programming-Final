@@ -64,19 +64,19 @@ app.use((req, res, next) => {
 // endpoint to get a random item
 // temp: currently only grabs items with ids 1-7
 app.get("/random-item", async (req, res) => {
-  const collection = mongo.db("db_loot").collection("db_loot");
+  const collection = mongo.db("db_loot").collection("Consumables");
   const item = await getRandomDBItem(1, 7, collection);
   res.json(item);
 });
 //handle username and password by chekcing the username against the db
 //temp calls of auth-name and auth-pass for now until actual ones established
-app.get("/auth-name", async (req, res) => {
+app.get("/auth-user", async (req, res) => {
   console.log(req.url);
-  let name = req.body;
+  let {name, password} = req.body;
   console.log(req.body);
   const foo = authenticateUser(name); //can't think of a name for var
   if(foo.equals("undefined") || foo.equals(null)){
-    addUser(name, "test");
+    addUser(name, password);
   }
 
 });
@@ -85,7 +85,7 @@ app.get("/auth-name", async (req, res) => {
 
 async function authenticateUser(name) {
   const collection = mongo.db("User_Info").collection("user");
-  const query = {Username: name};
+  const query = {Username: name, Userpassword: password};
   const myUser = await collection.findOne(query);
   console.log(myUser);
   return myUser;
