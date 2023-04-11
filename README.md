@@ -62,3 +62,27 @@ Different ores for weapons
 Map
 Not using map, generating stuff on the fly.
 
+
+
+
+Equipment tier for equipment
+hide id 1-4
+leather id 5-8
+iron id 9-12
+steel id 13-16
+dwarven id 17-20
+ebony id 21-24
+dragon id 25-28
+daedric id 29-32
+chaotic id 33-36
+
+Equipment tier for weapons
+grey
+white
+green
+blue
+purple
+orange
+pearlesent
+E-tech
+seraph
