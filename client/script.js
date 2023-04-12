@@ -43,10 +43,12 @@ let player_stats = {
   score: 69,
 };
 
+let chaos_level_current = 1;
+
 // initialize other UI things
 levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
 chaos.innerText = `${chaos_level_current}`;
-scoreDiv.innerText = score;
+scoreDiv.innerText = player_stats.score;
 
 const updatePlayerStats = () => {
   healthValues.innerText = `${player_stats.hp_current}/${player_stats.hp_max}`;
@@ -80,9 +82,6 @@ const handleInput = (event) => {
 
   // scroll middleDiv down to see the new entry
   p.scrollIntoView();
-
-  // clear value of middle div
-  actionInput.value = "";
 
   // if user inputs a keyword, subtract (or add) to player stats
   // temporary, for testing
@@ -135,3 +134,41 @@ const Explore = (event) => {
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
 };
+
+// web socket stuff
+async function websocketstuff() {
+  const ws = await connectToServer();
+
+  // temp way to send messages, only works when clicking submit
+  submitButton.addEventListener("click", (e) => {
+    const messageBody = actionInput.value;
+    actionInput.value = "";
+    ws.send(JSON.stringify({ msg: messageBody }));
+  });
+
+  // when receiving messages...
+  ws.onmessage = (webSocketMessage) => {
+    const messageBody = JSON.parse(webSocketMessage.data);
+    const sender = messageBody.sender;
+    const color = messageBody.color;
+    const msg = messageBody.msg;
+
+    const p = document.createElement("p");
+    p.innerText = `sender: ${sender}, color: ${color}, msg: ${msg}`;
+    middleDiv.appendChild(p);
+  };
+}
+
+async function connectToServer() {
+  const ws = new WebSocket("ws://localhost:7071/ws");
+  return new Promise((resolve, reject) => {
+    const timer = setInterval(() => {
+      if (ws.readyState === 1) {
+        clearInterval(timer);
+        resolve(ws);
+      }
+    }, 10);
+  });
+}
+
+websocketstuff();

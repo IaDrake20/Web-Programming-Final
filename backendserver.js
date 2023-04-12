@@ -14,6 +14,55 @@ const uri = `mongodb+srv://${user}:${pswrd}@cluster0.zpcyqgd.mongodb.net/test`;
 //setup connection to mongodb
 const { MongoClient } = require("mongodb");
 
+// web socket stuff
+// tutorial: https://ably.com/blog/web-app-websockets-nodejs
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ port: 7071 });
+// map of clients
+const clients = new Map();
+
+// register callback for when a client connects
+wss.on("connection", (ws) => {
+  console.log("client connected!");
+  const id = uuidv4();
+  const color = Math.floor(Math.random() * 360);
+  const metadata = { id, color };
+
+  // associate a client with some data (an id and color)
+  clients.set(ws, metadata);
+
+  // register callback for when client sends a message to server
+  ws.on("message", (messageAsString) => {
+    const message = JSON.parse(messageAsString);
+    const metadata = clients.get(ws);
+
+    // attach additional data to the message to be sent to everyone
+    message.sender = metadata.id;
+    message.color = metadata.color;
+
+    const outbound = JSON.stringify(message);
+
+    [...clients.keys()].forEach((client) => {
+      client.send(outbound);
+    });
+  });
+
+  // register callback for when client quits
+  ws.on("close", () => {
+    console.log("client left");
+    clients.delete(ws);
+  });
+});
+
+// generate a id
+function uuidv4() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
 let mongo;
 
 async function main() {
