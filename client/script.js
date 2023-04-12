@@ -23,7 +23,7 @@ const endButton = document.querySelector("#end-button");
 
 // attach event listeners
 submitButton.addEventListener("click", (e) => handleInput(e));
-endButton.addEventListener("click", (e) => Explore(e));
+endButton.addEventListener("click", () => Explore());
 actionInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") handleInput(e);
 });
@@ -77,7 +77,7 @@ const handleInput = (event) => {
   if (!actionInput.value) return;
   event.preventDefault();
   const p = document.createElement("p");
-  const value = actionInput.value;
+  value = actionInput.value;
   p.innerText = value;
 
   // scroll middleDiv down to see the new entry
@@ -106,23 +106,53 @@ const handleInput = (event) => {
     p.style.color = "yellow";
     if (player_stats.xp_current >= player_stats.xp_threshold)
       player_stats.xp_current = player_stats.xp_threshold;
-  } else if (value === "random item") {
-    fetch("http://localhost:3001/random-item")
+  } else if (value === "equipment") {
+    fetch("http://localhost:3001/Equipment")
       .then((response) => response.json())
       .then((data) => {
         const itemP = document.createElement("p");
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
+        value = null;
       });
-  } else if (value === "combat") {
+  }else if (value === "weapon") {
+    fetch("http://localhost:3001/Weapons")
+      .then((response) => response.json())
+      .then((data) => {
+        const itemP = document.createElement("p");
+        itemP.innerText = data.name;
+        itemP.style.color = "violet";
+        middleDiv.appendChild(itemP);
+        value = null;
+      });
+  }else if (value === "consumable") {
+    fetch("http://localhost:3001/Consumables")
+      .then((response) => response.json())
+      .then((data) => {
+        const itemP = document.createElement("p");
+        itemP.innerText = data.name;
+        itemP.style.color = "violet";
+        middleDiv.appendChild(itemP);
+        value = null;
+      });
+  } else if (value === "travel") {
+    p.style.color = "gray";
+  } else if (value === "search") {
+    p.style.color = "skyblue";
+  } else if (value === "hunt") {
     p.style.display = "none";
     Combat();
+  } else {
+    value = "Invalid Command";
   }
+  p.innerText = value;
 
   updatePlayerStats();
 
   middleDiv.appendChild(p);
+
+  actionInput.value = null;
 };
 
 const Combat = () => {
@@ -130,7 +160,7 @@ const Combat = () => {
   combatDiv.style.display = "flex";
 };
 
-const Explore = (event) => {
+const Explore = () => {
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
 };
