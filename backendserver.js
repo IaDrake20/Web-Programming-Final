@@ -189,7 +189,6 @@ Small_H: {number, P_h1Value},
     Equipment_Head: {E_hName, E_hValue}
 */
 
-async function add
 
 // temp
 app.get("/", (req, res) => {
