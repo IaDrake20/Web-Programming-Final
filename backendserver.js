@@ -152,25 +152,34 @@ async function addUser(name, password) {
   await collection.insertOne({
     Username: name,
     Password: password,
+    Small_H: 0,
+    Medium_H: 0,
+    Large_H: 0,
+    Small_M: 0,
+    Medium_M: 0,
+    Large_M: 0,
+    Equipment_Feet: 0,
+    Equipment_Chest: 0,
+    Equipment_Arms: 0,
+    Equipment_Head: 0,
+    Equipment_Weapon: 0
   });
   console.log("user added to db");
 }
-/*
+/* Template for user inventory
+Small_H: {number, P_h1Value},
+    Medium_H: {number, P_h2Value},
+    Large_H: {number, P_h3Value},
+    Small_M: {number, P_m1Value},
+    Medium_M: {number, P_m2Value},
+    Large_M: {number, P_m3Value},
+    Equipment_Feet: {E_fName, E_fValue},
+    Equipment_Chest: {E_cName, E_cValue},
+    Equipment_Arms: {E_aName, E_aValue},
+    Equipment_Head: {E_hName, E_hValue}
+*/
 
-// Create WebSocket connection.
-const socket = new WebSocket("ws://localhost:8080");
-
-// Connection opened
-socket.addEventListener("open", (event) => {
-  socket.send("Hello Server!");
-});
-
-// Listen for messages
-socket.addEventListener("message", (event) => {
-  console.log("Message from server ", event.data);
-});
-
- */
+async function add
 
 // temp
 app.get("/", (req, res) => {
