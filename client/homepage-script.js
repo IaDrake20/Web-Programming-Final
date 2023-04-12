@@ -1,12 +1,12 @@
-console.log("Hello world");
-
+// selections
 const homePage = document.querySelector("#home-page");
 const beginButton = document.querySelector("#begin-button");
 const usernameInput = document.querySelector("#username-input");
 const userPasswordInput = document.querySelector("#userpassword-input");
 const infoMessagesElement = document.querySelector("#info-messages-element");
 
-const GREEN = "#32CD32"; //bright green color
+// reusable colors
+const GREEN = "#32CD32";
 const RED = "#B22222";
 
 beginButton.addEventListener("click", async () => {

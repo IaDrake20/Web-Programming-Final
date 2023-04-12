@@ -1,46 +1,52 @@
-console.log("Hello from script!");
-
-let hp_current = 100;
-let hp_max = 100;
-
-let mana_current = 10;
-let mana_max = 10;
-
-let ap_current = 4;
-let ap_max = 4;
-
-let xp_current = 0;
-let xp_threshold = 25;
-
-let character_level_current = 1;
-let character_level_max = 10;
-
-let chaos_level_current = 1;
-let chaos_level_max = 10;
-
-let score = 69;
-
-let player_stats = {
-  hp_max,
-  hp_current,
-  mana_current,
-  mana_max,
-  ap_current,
-  ap_max,
-  xp_current,
-  xp_threshold,
-  character_level_current,
-  character_level_max,
-};
+// p with number representation of values (eg. 100/100)
 const healthValues = document.querySelector("#health-values");
 const manaValues = document.querySelector("#mana-values");
 const actionPointsValues = document.querySelector("#action-points-values");
 const experienceValues = document.querySelector("#experience-values");
 
+// img that shows current stats fill, scale this to shrink the bar
 const healthBar = document.querySelector("#health-bar");
 const manaBar = document.querySelector("#mana-bar");
 const actionPointsBar = document.querySelector("#action-points-bar");
 const experienceBar = document.querySelector("#experience-bar");
+
+// misc selections
+const middleDiv = document.querySelector("#middle");
+const exploreDiv = document.querySelector("#explore");
+const combatDiv = document.querySelector("#combat");
+const actionInput = document.querySelector("#action-input");
+const levelDiv = document.querySelector("#player-level");
+const chaos = document.querySelector("#chaos-level");
+const scoreDiv = document.querySelector("#score");
+const submitButton = document.querySelector("#submit-button");
+const endButton = document.querySelector("#end-button");
+
+// attach event listeners
+submitButton.addEventListener("click", (e) => handleInput(e));
+endButton.addEventListener("click", (e) => Explore(e));
+actionInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") handleInput(e);
+});
+
+// initialize player_stats object
+let player_stats = {
+  hp_max: 100,
+  hp_current: 100,
+  mana_current: 10,
+  mana_max: 10,
+  ap_current: 4,
+  ap_max: 4,
+  xp_current: 0,
+  xp_threshold: 25,
+  character_level_current: 1,
+  character_level_max: 10,
+  score: 69,
+};
+
+// initialize other UI things
+levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
+chaos.innerText = `${chaos_level_current}`;
+scoreDiv.innerText = score;
 
 const updatePlayerStats = () => {
   healthValues.innerText = `${player_stats.hp_current}/${player_stats.hp_max}`;
@@ -62,11 +68,6 @@ const updatePlayerStats = () => {
   experienceBar.style.width = `${150 * xpPercentage}px`;
 };
 updatePlayerStats();
-
-const middleDiv = document.querySelector("#middle");
-const exploreDiv = document.querySelector("#explore");
-const combatDiv = document.querySelector("#combat");
-
 
 const handleInput = (event) => {
   event.preventDefault();
@@ -128,28 +129,9 @@ const handleInput = (event) => {
 const Combat = () => {
   exploreDiv.style.display = "none";
   combatDiv.style.display = "flex";
-}
+};
 
 const Explore = (event) => {
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
-}
-
-const actionInput = document.querySelector("#action-input");
-actionInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") handleInput(e);
-});
-
-document.querySelector("#submit-button").addEventListener("click", (e) => handleInput(e));
-document.querySelector("#end-button").addEventListener("click", (e) => Explore(e));
-
-
-
-const levelDiv = document.querySelector("#player-level");
-levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
-
-const chaos = document.querySelector("#chaos-level");
-chaos.innerText = `${chaos_level_current}`;
-
-let scoreDiv = document.querySelector("#score");
-scoreDiv.innerText = score;
+};
