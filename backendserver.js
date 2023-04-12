@@ -113,12 +113,22 @@ app.use((req, res, next) => {
 });
 
 // endpoint to get a random item
-// temp: currently only grabs items with ids 1-7
-app.get("/random-item", async (req, res) => {
+app.get("/Consumables", async (req, res) => {
   const collection = mongo.db("db_loot").collection("Consumables");
-  const item = await getRandomDBItem(1, 2, collection);
+  const item = await getRandomDBItem(1, 6, collection);
   res.json(item);
 });
+app.get("/Equipment", async (req, res) => {
+  const collection = mongo.db("db_loot").collection("Equipment");
+  const item = await getRandomDBItem(1, 36, collection);
+  res.json(item);
+});
+app.get("/Weapons", async (req, res) => {
+  const collection = mongo.db("db_loot").collection("Weapons");
+  const item = await getRandomDBItem(1, 8, collection);
+  res.json(item);
+});
+
 //handle username and password by chekcing the username against the db
 //temp calls of auth-name and auth-pass for now until actual ones established
 app.post("/auth-name", async (req, res) => {

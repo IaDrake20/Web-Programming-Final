@@ -55,15 +55,21 @@
       </div>
       <div id="middle">
         <p>Type hp, mana, ap, or xp to adjust values</p>
-        <p>Type 'random item' to receive a random item</p>
+        <p>Type 'weapon' to receive a random weapon</p>
+        <p>Type 'consumable' to receive a random consumable</p>
+        <p>Type 'equipment' to receive a random equipment</p>
       </div>
       <div id="explore" style="display: flex">
           <input id="action-input" type="text" />
           <button id="submit-button">Submit</button>
           <details>
               <summary id="consumables">Consumables</summary>
-              <button style="display: none" id="health-potion">Health Potion</button>
-              <button style="display: none" id="mana-potion">Mana Potion</button>
+              <button style="display: none" id="health-s">Small Health Potion</button>
+              <button style="display: none" id="mana-s">Small Mana Potion</button>
+              <button style="display: none" id="health-m">Medium Health Potion</button>
+              <button style="display: none" id="mana-m">Medium Mana Potion</button>
+              <button style="display: none" id="health-l">Large Health Potion</button>
+              <button style="display: none" id="mana-l">Large Mana Potion</button>
           </details>
       </div>
       <div id="combat" style="display: none">
@@ -76,11 +82,16 @@
             <button style="display: none" id="magic3">Invigorate</button>
             <button style="display: none" id="magic4">Escape</button>
         </details>
+        <button id="attack-button">Investigate</button>
         <button id="run-button">Run</button>
         <details>
             <summary id="consumables">Consumables</summary>
-            <button style="display: none" id="health-potion">Health Potion</button>
-            <button style="display: none" id="mana-potion">Mana Potion</button>
+            <button style="display: none" id="health-s">Small Health Potion</button>
+            <button style="display: none" id="mana-s">Small Mana Potion</button>
+            <button style="display: none" id="health-m">Medium Health Potion</button>
+            <button style="display: none" id="mana-m">Medium Mana Potion</button>
+            <button style="display: none" id="health-l">Large Health Potion</button>
+            <button style="display: none" id="mana-l">Large Mana Potion</button>
         </details>
       </div>
     </div>
