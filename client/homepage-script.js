@@ -50,8 +50,13 @@ beginButton.addEventListener("click", async () => {
 });
 
 function addLoadingSpinner() {
-  const spinnerDiv = document.createElement("div");
-  spinnerDiv.id = "loading-spinner";
-
-  homePage.appendChild(spinnerDiv);
+  console.log("Checking if spinner div already exists...");
+  if(document.getElementById("loading-spinner")){
+    console.log("Loading Spinner already exists...");
+  } else {
+    const spinnerDiv = document.createElement("div");
+    spinnerDiv.id = "loading-spinner";
+    homePage.appendChild(spinnerDiv);
+    console.log("Loading spinner created...")
+  }
 }
