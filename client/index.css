@@ -166,6 +166,7 @@ body {
 #action-input {
   width: 100%;
   flex: 2;
+  margin: 5px;
   background-color: #1d1f2b;
   border: none;
   caret-color: #ddd;
@@ -190,6 +191,7 @@ body {
 
 button {
   padding: 10px;
+  margin: 5px;
   flex: 1;
   background-color: #1d1f2b;
   color: #ddd;
@@ -208,6 +210,7 @@ button:active {
 
 details {
     padding: 10px;
+    margin: 5px;
     flex: 1;
     background-color: #1d1f2b;
     color: #ddd;
