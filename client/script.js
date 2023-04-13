@@ -19,11 +19,23 @@ const levelDiv = document.querySelector("#player-level");
 const chaos = document.querySelector("#chaos-level");
 const scoreDiv = document.querySelector("#score");
 const submitButton = document.querySelector("#submit-button");
-const endButton = document.querySelector("#end-button");
+const attackButton = document.querySelector("#attack-button");
+const magicButton1 = document.querySelector("#magic1");
+const magicButton2 = document.querySelector("#magic2");
+const magicButton3 = document.querySelector("#magic3");
+const magicButton4 = document.querySelector("#magic4");
+const runButton = document.querySelector("#run-button");
+const investigate = document.querySelector("#investigate");
 
 // attach event listeners
+attackButton.addEventListener("click", () => Attack());
+magicButton1.addEventListener("click", () => Magic1());
+magicButton2.addEventListener("click", () => Magic2());
+magicButton3.addEventListener("click", () => Magic3());
+magicButton4.addEventListener("click", () => Magic4());
+runButton.addEventListener("click", () => Run());
+investigate.addEventListener("click", () => Investigate());
 submitButton.addEventListener("click", (e) => handleInput(e));
-endButton.addEventListener("click", () => Explore());
 actionInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") handleInput(e);
 });
@@ -32,8 +44,8 @@ actionInput.addEventListener("keypress", (e) => {
 let player_stats = {
   hp_max: 100,
   hp_current: 100,
-  mana_current: 10,
-  mana_max: 10,
+  mana_current: 50,
+  mana_max: 50,
   ap_current: 4,
   ap_max: 4,
   xp_current: 0,
@@ -68,6 +80,10 @@ const updatePlayerStats = () => {
   manaBar.style.width = `${150 * manaPercentage}px`;
   actionPointsBar.style.width = `${150 * apPercentage}px`;
   experienceBar.style.width = `${150 * xpPercentage}px`;
+
+  if (player_stats.ap_current == 0){
+    console.log("End Turn");
+  }
 };
 updatePlayerStats();
 
@@ -155,16 +171,6 @@ const handleInput = (event) => {
   actionInput.value = null;
 };
 
-const Combat = () => {
-  exploreDiv.style.display = "none";
-  combatDiv.style.display = "flex";
-};
-
-const Explore = () => {
-  combatDiv.style.display = "none";
-  exploreDiv.style.display = "flex";
-};
-
 // web socket stuff
 async function websocketstuff() {
   const ws = await connectToServer();
@@ -187,6 +193,106 @@ async function websocketstuff() {
     p.innerText = `sender: ${sender}, color: ${color}, msg: ${msg}`;
     middleDiv.appendChild(p);
   };
+}
+// Function to enter combat
+const Combat = () => {
+    exploreDiv.style.display = "none";
+    combatDiv.style.display = "flex";
+};
+
+// Function to exit combat
+const Escape = () => {
+    console.log("Escape");
+    combatDiv.style.display = "none";
+    exploreDiv.style.display = "flex";
+};
+
+// Attack Function
+const Attack = () => {
+  player_stats.ap_current -= 1;
+  console.log("Enemy Damage");
+
+  updatePlayerStats();
+}
+
+// Spell 1 - Heal
+const Magic1 = () => {
+  if (player_stats.mana_current > 5) {
+    if ((player_stats.hp_current + 25) > (player_stats.hp_max)) {
+      player_stats.hp_current = player_stats.hp_max;
+    } else {
+      player_stats.hp_current += 25;
+    }
+    player_stats.mana_current -= 5;
+    player_stats.ap_current -= 1;
+
+    updatePlayerStats();
+  } else {
+      console.log("No Magic");
+  }
+
+  
+}
+
+// Spell 2 - Fireball
+const Magic2 = () => {
+  if (player_stats.mana_current > 15) {
+    console.log("Fuckton of Damage");
+    player_stats.mana_current -= 15;
+    player_stats.ap_current -= 1;
+
+    updatePlayerStats();
+} else {
+    console.log("No Magic");
+  }
+}
+
+// Spell 3 - Invigorate
+const Magic3 = () => {
+  if (player_stats.mana_current > 25) {
+    player_stats.mana_current -= 25;
+    player_stats.ap_current += 1;
+
+    updatePlayerStats();
+} else {
+    console.log("No Magic");
+  }
+}
+
+// Spell 4 - Escape
+const Magic4 = () => {
+  if (player_stats.mana_current > 50) {
+    player_stats.mana_current -= 50;
+    Escape();
+
+    updatePlayerStats();
+  } else {
+    console.log("No Magic");
+  }
+
+}
+
+// Run Function
+const Run = () => {
+  chance = Math.random() * 100;
+  player_stats.ap_current -= 1;
+
+  updatePlayerStats();
+  if (chance > 75) {
+    console.log("Escape Successful")
+    Escape();
+  }
+  else {
+    console.log("Escape Unsuccessful")
+  }
+}
+
+// Investigate Function
+const Investigate = () => { 
+  console.log("Opponent Data");
+  player_stats.ap_current -= 1;
+
+  updatePlayerStats();
 }
 
 async function connectToServer() {
