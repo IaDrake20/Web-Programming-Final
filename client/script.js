@@ -122,6 +122,8 @@ const handleInput = (event) => {
     p.style.color = "yellow";
     if (player_stats.xp_current >= player_stats.xp_threshold)
       player_stats.xp_current = player_stats.xp_threshold;
+
+
   } else if (value === "equipment") {
     fetch("http://localhost:3001/Equipment")
       .then((response) => response.json())
@@ -153,6 +155,16 @@ const handleInput = (event) => {
         value = null;
       });
   } else if (value === "travel") {
+    if (player_stats.hp_current < player_stats.hp_max) {
+      if (player_stats.hp_current <= player_stats.hp_max - 5) {
+        player_stats.hp_current += 5;
+      } else {
+        player_stats.hp_current = player_stats.hp_max;
+      }
+    }
+    if (player_stats.mp_current < player_stats.mp_max) {
+      player_stats.mp_current++;
+    }
     p.style.color = "gray";
   } else if (value === "search") {
     p.style.color = "skyblue";
@@ -198,6 +210,7 @@ async function websocketstuff() {
 const Combat = () => {
     exploreDiv.style.display = "none";
     combatDiv.style.display = "flex";
+    player_stats.ap_current = player_stats.ap_max;
 };
 
 // Function to exit combat
@@ -230,8 +243,6 @@ const Magic1 = () => {
   } else {
       console.log("No Magic");
   }
-
-  
 }
 
 // Spell 2 - Fireball
