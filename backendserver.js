@@ -135,31 +135,52 @@ app.get("/Weapons", async (req, res) => {
   console.log("Weapon retrieved! "+item.name);
 });
 
-//handle username and password by chekcing the username against the db
+//handle username and password by checking the username against the db
 app.post("/auth-name", async (req, res) => {
   console.log(req.url);
   let name = req.body.name;
   let pass = req.body.pass;
   console.log(name);
   console.log(pass);
-  const exists = await authenticateUser(name, pass);
+  const exists = authenticateUser(name, pass);
   if (!exists) {
     console.log("user does not exist... adding to db");
     addUser(name, pass);
-  } else {
-    console.log("user exists");
+  } else if(exists) {
+    const correctCredentials = loginUser(name, pass);
+    if(correctCredentials == true){
+      //IAN: presumably would give some sort of signal to get user data from db
+      //or load them here
+      console.log("correctCredentials is "+(await correctCredentials).valueOf());
+      console.log("Loading user info...WORK_IN_PROGRESS");
+    } else {
+      console.log(name +" tried to login in with incorrect password "+pass);
+    }
   }
   res.end();
 });
 
-//make new
 
 async function authenticateUser(name) {
   const collection = mongo.db("User_Info").collection("user");
   const query = { Username: name};
   const myUser = await collection.findOne(query);
-  console.log(myUser);
+  //console.log(myUser);
   return myUser;
+}
+
+//login. IAN: Could be combined with Adduser to do more with less code, fine for now
+async function loginUser(name, password) {
+  const collection = mongo.db("User_Info").collection("user");
+  const query = { Username: name, Password: password };
+  const doesExist = await collection.findOne(query);
+  if(doesExist){
+    console.log("Logging "+ name+" in.");
+    return true;
+  } else {
+    //console.log(name +" tried to login in with incorrect password "+password);
+    return false;
+  }
 }
 
 async function addUser(name, password) {
