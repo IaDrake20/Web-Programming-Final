@@ -114,23 +114,28 @@ app.use((req, res, next) => {
 
 // endpoint to get a random item
 app.get("/Consumables", async (req, res) => {
+  console.log("Consumable requested...");
   const collection = mongo.db("db_loot").collection("Consumables");
   const item = await getRandomDBItem(1, 6, collection);
   res.json(item);
+  console.log("Consumable retrieved! "+item.name);
 });
 app.get("/Equipment", async (req, res) => {
+  console.log("Equipment Requested...");
   const collection = mongo.db("db_loot").collection("Equipment");
   const item = await getRandomDBItem(1, 36, collection);
   res.json(item);
+  console.log("Equipment retrieved! "+item.name);
 });
 app.get("/Weapons", async (req, res) => {
+  console.log("Weapon requested...");
   const collection = mongo.db("db_loot").collection("Weapons");
   const item = await getRandomDBItem(1, 8, collection);
   res.json(item);
+  console.log("Weapon retrieved! "+item.name);
 });
 
 //handle username and password by chekcing the username against the db
-//temp calls of auth-name and auth-pass for now until actual ones established
 app.post("/auth-name", async (req, res) => {
   console.log(req.url);
   let name = req.body.name;
@@ -149,9 +154,9 @@ app.post("/auth-name", async (req, res) => {
 
 //make new
 
-async function authenticateUser(name, password) {
+async function authenticateUser(name) {
   const collection = mongo.db("User_Info").collection("user");
-  const query = { Username: name, Password: password };
+  const query = { Username: name};
   const myUser = await collection.findOne(query);
   console.log(myUser);
   return myUser;
@@ -188,6 +193,29 @@ Small_H: {number, P_h1Value},
     Equipment_Arms: {E_aName, E_aValue},
     Equipment_Head: {E_hName, E_hValue}
 */
+
+//update user info
+
+async function updateUser(name) {
+  const collection = mongo.db("User_Info").collection("user");
+  await collection.findOne({Username: name})
+  await collection.insertOne({
+    Username: name,
+    Password: password,
+    Small_H: 0,
+    Medium_H: 0,
+    Large_H: 0,
+    Small_M: 0,
+    Medium_M: 0,
+    Large_M: 0,
+    Equipment_Feet: 0,
+    Equipment_Chest: 0,
+    Equipment_Arms: 0,
+    Equipment_Head: 0,
+    Equipment_Weapon: 0
+  });
+  console.log("user added to db");
+}
 
 
 // temp
