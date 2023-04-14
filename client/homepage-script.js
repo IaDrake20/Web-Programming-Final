@@ -33,6 +33,9 @@ beginButton.addEventListener("click", async () => {
   // console.log(url.toString());
   // fetch(url);
 
+  //TODO: set this up better
+  const verifiedUser = false;
+
   console.log(username);
   await fetch(`http://localhost:3001/auth-name`, {
     headers: {
@@ -43,8 +46,13 @@ beginButton.addEventListener("click", async () => {
     body: JSON.stringify({ name: username, pass: userpassword }),
   });
 
-  infoMessagesElement.style.color = GREEN;
-  infoMessagesElement.innerText = `Logging in as '${username}'...`;
+  if(verifiedUser){
+    infoMessagesElement.style.color = GREEN;
+    infoMessagesElement.innerText = `Logging in as '${username}'...`;
+  } else {
+    infoMessagesElement.style.color = RED;
+    infoMessagesElement.innerText= 'Incorrect login info';
+  }
 
   addLoadingSpinner();
 });

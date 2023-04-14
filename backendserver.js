@@ -142,30 +142,34 @@ app.post("/auth-name", async (req, res) => {
   let pass = req.body.pass;
   console.log(name);
   console.log(pass);
-  const exists = authenticateUser(name, pass);
-  if (!exists) {
+
+  let exists = await findUser(name);
+  console.log("Exists is "+ exists.valueOf());
+  if (exists == false) {
     console.log("user does not exist... adding to db");
     addUser(name, pass);
-  } else if(exists) {
+  } else if(exists == true) {
+    console.log("get fucked2");
     const correctCredentials = loginUser(name, pass);
-    if(correctCredentials == true){
-      //IAN: presumably would give some sort of signal to get user data from db
-      //or load them here
-      console.log("correctCredentials is "+(await correctCredentials).valueOf());
-      console.log("Loading user info...WORK_IN_PROGRESS");
-    } else {
-      console.log(name +" tried to login in with incorrect password "+pass);
-    }
+  } else{
+    console.log("get fucked");
   }
   res.end();
 });
 
-
-async function authenticateUser(name) {
+//check to see if user exists in db
+async function findUser(name) {
   const collection = mongo.db("User_Info").collection("user");
   const query = { Username: name};
-  const myUser = await collection.findOne(query);
+  var myUser = await collection.findOne(query);
   //console.log(myUser);
+
+  if(myUser == null){
+    console.log("in finduser return set to false;")
+    myUser = false;
+  } else {
+    myUser = true;
+  }
   return myUser;
 }
 
@@ -174,11 +178,12 @@ async function loginUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
   const query = { Username: name, Password: password };
   const doesExist = await collection.findOne(query);
+  //console.log("In loginUser doesExist == "+doesExist.valueOf());
   if(doesExist){
     console.log("Logging "+ name+" in.");
     return true;
   } else {
-    //console.log(name +" tried to login in with incorrect password "+password);
+    console.log(name +" tried to login in with incorrect password "+password);
     return false;
   }
 }
@@ -198,7 +203,10 @@ async function addUser(name, password) {
     Equipment_Chest: 0,
     Equipment_Arms: 0,
     Equipment_Head: 0,
-    Equipment_Weapon: 0
+    Equipment_Weapon: 0,
+    World_Current_Stage: 0,
+    World_Chaos_Level: 0
+
   });
   console.log("user added to db");
 }
@@ -235,7 +243,6 @@ async function updateUser(name) {
     Equipment_Head: 0,
     Equipment_Weapon: 0
   });
-  console.log("user added to db");
 }
 
 
