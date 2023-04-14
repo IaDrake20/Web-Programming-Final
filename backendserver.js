@@ -97,7 +97,7 @@ main().catch(console.error);
 async function getRandomDBItem(min, max, collection) {
   const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
   let element = randomNum;
-  const query = { id: element };
+  const query = { id: element};
   const myItem = await collection.findOne(query);
   return myItem;
 }
@@ -118,7 +118,7 @@ app.get("/Consumables", async (req, res) => {
   const collection = mongo.db("db_loot").collection("Consumables");
   const item = await getRandomDBItem(1, 6, collection);
   res.json(item);
-  console.log("Consumable retrieved! "+item.name);
+  console.log("Consumable retrieved! "+ item.name);
 });
 app.get("/Equipment", async (req, res) => {
   console.log("Equipment Requested...");

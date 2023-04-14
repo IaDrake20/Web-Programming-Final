@@ -26,6 +26,13 @@ const magicButton3 = document.querySelector("#magic3");
 const magicButton4 = document.querySelector("#magic4");
 const runButton = document.querySelector("#run-button");
 const investigate = document.querySelector("#investigate");
+const consumeButton1 = document.querySelectorAll("#health-s");
+const consumeButton2 = document.querySelectorAll("#health-m");
+const consumeButton3 = document.querySelectorAll("#health-l");
+const consumeButton4 = document.querySelectorAll("#mana-s");
+const consumeButton5 = document.querySelectorAll("#mana-m");
+const consumeButton6 = document.querySelectorAll("#mana-l");
+
 
 // attach event listeners
 attackButton.addEventListener("click", () => Attack());
@@ -33,6 +40,12 @@ magicButton1.addEventListener("click", () => Magic1());
 magicButton2.addEventListener("click", () => Magic2());
 magicButton3.addEventListener("click", () => Magic3());
 magicButton4.addEventListener("click", () => Magic4());
+consumeButton1.forEach((button) => { button.addEventListener("click", () => Consume1()); });
+consumeButton2.forEach((button) => { button.addEventListener("click", () => Consume2()); });
+consumeButton3.forEach((button) => { button.addEventListener("click", () => Consume3()); });
+consumeButton4.forEach((button) => { button.addEventListener("click", () => Consume4()); });
+consumeButton5.forEach((button) => { button.addEventListener("click", () => Consume5()); });
+consumeButton6.forEach((button) => { button.addEventListener("click", () => Consume6()); });
 runButton.addEventListener("click", () => Run());
 investigate.addEventListener("click", () => Investigate());
 submitButton.addEventListener("click", (e) => handleInput(e));
@@ -83,6 +96,8 @@ const updatePlayerStats = () => {
 
   if (player_stats.ap_current == 0){
     console.log("End Turn");
+    player_stats.ap_current += (player_stats.ap_max);
+    updatePlayerStats();
   }
 };
 updatePlayerStats();
@@ -94,8 +109,6 @@ const handleInput = (event) => {
   event.preventDefault();
   const p = document.createElement("p");
   value = actionInput.value;
-  p.innerText = value;
-
   // scroll middleDiv down to see the new entry
   p.scrollIntoView();
 
@@ -106,7 +119,7 @@ const handleInput = (event) => {
     p.style.color = "red";
     if (player_stats.hp_current <= 0) player_stats.hp_current = 0;
   } else if (value === "mana") {
-    player_stats.mana_current -= 1;
+    player_stats.mana_current -= 5;
     p.style.color = "blue";
     if (player_stats.mana_current <= 0) player_stats.mana_current = 0;
   } else if (value === "mana +") {
@@ -152,6 +165,50 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
+        switch (data.id) {
+        case 1:
+          currConsumable = document.querySelectorAll("#health-s");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // health-s ++
+          break;
+        case 2:
+          currConsumable = document.querySelectorAll("#health-m");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // health-m ++
+          break;
+        case 3:
+          currConsumable = document.querySelectorAll("#health-l");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // health-l ++
+          break;
+        case 4:
+          currConsumable = document.querySelectorAll("#mana-s");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // mana-s ++
+          break;
+        case 5:
+          currConsumable = document.querySelectorAll("#mana-m");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // mana-m ++
+          break;
+        case 6:
+          currConsumable = document.querySelectorAll("#mana-l");
+          currConsumable.forEach((consumable) => {
+            consumable.style.display = "flex";
+          });
+          // mana-l ++
+          break;
+        }
         value = null;
       });
   } else if (value === "travel") {
@@ -162,11 +219,12 @@ const handleInput = (event) => {
         player_stats.hp_current = player_stats.hp_max;
       }
     }
-    if (player_stats.mp_current < player_stats.mp_max) {
-      player_stats.mp_current++;
+    if (player_stats.mana_current < player_stats.mana_max) {
+      player_stats.mana_current++;
     }
     p.style.color = "gray";
   } else if (value === "search") {
+
     p.style.color = "skyblue";
   } else if (value === "hunt") {
     p.style.display = "none";
@@ -208,16 +266,16 @@ async function websocketstuff() {
 }
 // Function to enter combat
 const Combat = () => {
-    exploreDiv.style.display = "none";
-    combatDiv.style.display = "flex";
-    player_stats.ap_current = player_stats.ap_max;
+  exploreDiv.style.display = "none";
+  combatDiv.style.display = "flex"
+  player_stats.ap_current = player_stats.ap_max;
 };
 
 // Function to exit combat
 const Escape = () => {
-    console.log("Escape");
-    combatDiv.style.display = "none";
-    exploreDiv.style.display = "flex";
+  console.log("Escape");
+  combatDiv.style.display = "none";
+  exploreDiv.style.display = "flex";
 };
 
 // Attack Function
@@ -240,8 +298,8 @@ const Magic1 = () => {
     player_stats.ap_current -= 1;
 
     updatePlayerStats();
-  } else {
-      console.log("No Magic");
+} else {
+    console.log("No Magic");
   }
 }
 
@@ -292,8 +350,7 @@ const Run = () => {
   if (chance > 75) {
     console.log("Escape Successful")
     Escape();
-  }
-  else {
+} else {
     console.log("Escape Unsuccessful")
   }
 }
@@ -303,6 +360,102 @@ const Investigate = () => {
   console.log("Opponent Data");
   player_stats.ap_current -= 1;
 
+  updatePlayerStats();
+}
+
+const Consume1 = () => {
+  if ((player_stats.hp_current + 20) > (player_stats.hp_max)) {
+    player_stats.hp_current = player_stats.hp_max;
+} else {
+    player_stats.hp_current += 20;
+  }
+  // health-s --
+  // if(health-s == 0) {
+    currConsumable = document.querySelectorAll("#health-s");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
+  updatePlayerStats();
+}
+
+const Consume2 = () => {
+  if ((player_stats.hp_current + 50) > (player_stats.hp_max)) {
+    player_stats.hp_current = player_stats.hp_max;
+} else {
+    player_stats.hp_current += 50;
+  }
+  // health-m --
+  // if(health-m == 0) {
+    currConsumable = document.querySelectorAll("#health-m");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
+  updatePlayerStats();
+}
+
+const Consume3 = () => {
+  if ((player_stats.hp_current + 100) > (player_stats.hp_max)) {
+    player_stats.hp_current = player_stats.hp_max;
+} else {
+    player_stats.hp_current += 100;
+  }
+  // health-l --
+  // if(health-l == 0) {
+    currConsumable = document.querySelectorAll("#health-l");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
+  updatePlayerStats();
+}
+
+const Consume4 = () => {
+  if ((player_stats.mana_current + 10) > (player_stats.mana_max)) {
+    player_stats.mana_current = player_stats.mana_max;
+} else {
+    player_stats.mana_current += 10;
+  }
+  // mana-s --
+  // if(mana-s == 0) {
+    currConsumable = document.querySelectorAll("#mana-s");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
+  updatePlayerStats();
+}
+
+const Consume5 = () => {
+  if ((player_stats.mana_current + 25) > (player_stats.mana_max)) {
+    player_stats.mana_current = player_stats.mana_max;
+} else {
+    player_stats.mana_current += 25;
+  }
+  // mana-m --
+  // if(mana-m == 0) {
+    currConsumable = document.querySelectorAll("#mana-m");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
+  updatePlayerStats();
+}
+
+const Consume6 = () => {
+  if ((player_stats.mana_current + 50) > (player_stats.mana_max)) {
+    player_stats.mana_current = player_stats.mana_max;
+} else {
+    player_stats.mana_current += 50;
+  }
+  // mana-l --
+  // if(mana-l == 0) {
+    currConsumable = document.querySelectorAll("#mana-l");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  // }
   updatePlayerStats();
 }
 
