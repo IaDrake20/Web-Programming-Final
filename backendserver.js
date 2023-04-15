@@ -149,29 +149,6 @@ app.get("/Events", async (req, res) => {
   console.log(item.description);
 });
 
-//handle username and password by checking the username against the db
-// deprecated, use /signup and /login instead
-app.post("/auth-name", async (req, res) => {
-  console.log(req.url);
-  let name = req.body.name;
-  let pass = req.body.pass;
-  console.log(name);
-  console.log(pass);
-
-  let exists = await findUser(name);
-  console.log("Exists is " + exists.valueOf());
-  if (exists == false) {
-    console.log("user does not exist... adding to db");
-    addUser(name, pass);
-  } else if (exists == true) {
-    console.log("get fucked2");
-    const user = loginUser(name, pass);
-  } else {
-    console.log("get fucked");
-  }
-  res.end();
-});
-
 app.post("/signup", async (req, res) => {
   let name = req.body.name;
   let pass = req.body.pass;
