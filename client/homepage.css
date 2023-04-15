@@ -58,9 +58,14 @@ button {
   height: 30px;
 }
 
-#auth-buttons {
+#auth-buttons,
+#play-buttons {
   display: flex;
   gap: 20px;
+}
+
+#play-buttons {
+  display: none;
 }
 
 #loading-spinner {

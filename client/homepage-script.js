@@ -8,6 +8,10 @@ const usernameInput = document.querySelector("#username-input");
 const userPasswordInput = document.querySelector("#userpassword-input");
 const infoMessagesElement = document.querySelector("#info-messages-element");
 
+const playButtonsDiv = document.querySelector("#play-buttons");
+const playSoloButton = document.querySelector("#play-solo-button");
+const playOnlineButton = document.querySelector("#play-online-button");
+
 // reusable colors
 const GREEN = "#32CD32";
 const RED = "#B22222";
@@ -67,12 +71,21 @@ signupButton.addEventListener("click", async () => {
   }
 });
 
-loginButton.addEventListener("click", () => {
-  login();
+loginButton.addEventListener("click", async () => {
+  await login();
 });
 
-logoutButton.addEventListener("click", () => {
-  logout();
+logoutButton.addEventListener("click", async () => {
+  await logout();
+});
+
+// just simply move to game page for now
+playSoloButton.addEventListener("click", async () => {
+  window.location.href = "/";
+});
+
+playOnlineButton.addEventListener("click", async () => {
+  window.location.href = "/";
 });
 
 const login = async () => {
@@ -123,14 +136,15 @@ const login = async () => {
     infoMessagesElement.innerText = `Logged in as: ${username}!`;
   }
 
-  updateAuthButtons();
+  updateUI();
 };
 
 const logout = async () => {
   const username = usernameInput.value;
   const userpassword = userPasswordInput.value;
 
-  showLoadingSpinner();
+  // loading spinner causes flashes, because this operation is extremely fast
+  // showLoadingSpinner();
 
   const response = await fetch(`http://localhost:3001/logout`, {
     headers: {
@@ -141,7 +155,7 @@ const logout = async () => {
     body: JSON.stringify({ name: username, pass: userpassword }),
   });
 
-  hideLoadingSpinner();
+  // hideLoadingSpinner();
 
   if (!response.ok) {
     infoMessagesElement.style.color = RED;
@@ -152,7 +166,13 @@ const logout = async () => {
     infoMessagesElement.innerText = `Logged out!`;
   }
 
+  updateUI();
+};
+
+// call this when state changes to hide/show different UI elements
+const updateUI = () => {
   updateAuthButtons();
+  updatePlayButtons();
 };
 
 // when auth status changes, call this method to hide/show the login/signup vs logout buttons
@@ -169,6 +189,14 @@ const updateAuthButtons = () => {
     signupButton.style.display = "block";
 
     logoutButton.style.display = "none";
+  }
+};
+
+const updatePlayButtons = () => {
+  if (authUser) {
+    playButtonsDiv.style.display = "flex";
+  } else {
+    playButtonsDiv.style.display = "none";
   }
 };
 
