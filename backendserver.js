@@ -134,6 +134,20 @@ app.get("/Weapons", async (req, res) => {
   res.json(item);
   console.log("Weapon retrieved! "+item.name);
 });
+app.get("/Mobs", async (req, res) => {
+  console.log("Mob requested...");
+  const collection = mongo.db("db_enemy").collection("mobs");
+  const item = await getRandomDBItem(1, 2, collection);
+  res.json(item);
+  console.log(item.description);
+});
+app.get("/Events", async (req, res) => {
+  console.log("Mob requested...");
+  const collection = mongo.db("db_events").collection("events");
+  const item = await getRandomDBItem(1, 7, collection);
+  res.json(item);
+  console.log(item.description);
+});
 
 //handle username and password by checking the username against the db
 app.post("/auth-name", async (req, res) => {

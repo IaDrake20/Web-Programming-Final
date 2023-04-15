@@ -212,6 +212,7 @@ const handleInput = (event) => {
         value = null;
       });
   } else if (value === "travel") {
+    p.style.color = "gray";
     if (player_stats.hp_current < player_stats.hp_max) {
       if (player_stats.hp_current <= player_stats.hp_max - 5) {
         player_stats.hp_current += 5;
@@ -222,7 +223,9 @@ const handleInput = (event) => {
     if (player_stats.mana_current < player_stats.mana_max) {
       player_stats.mana_current++;
     }
-    p.style.color = "gray";
+
+    
+
   } else if (value === "search") {
 
     p.style.color = "skyblue";
@@ -269,6 +272,11 @@ const Combat = () => {
   exploreDiv.style.display = "none";
   combatDiv.style.display = "flex"
   player_stats.ap_current = player_stats.ap_max;
+    fetch("http://localhost:3001/Mobs")
+      .then((response) => response.json())
+      .then((data) => {
+          console.log(data.description);
+      });
 };
 
 // Function to exit combat
@@ -347,7 +355,7 @@ const Run = () => {
   player_stats.ap_current -= 1;
 
   updatePlayerStats();
-  if (chance > 75) {
+  if (chance > 66) {
     console.log("Escape Successful")
     Escape();
 } else {
