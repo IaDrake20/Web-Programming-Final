@@ -97,7 +97,7 @@ main().catch(console.error);
 async function getRandomDBItem(min, max, collection) {
   const randomNum = Math.floor(Math.random() * (max - min + 1) + min);
   let element = randomNum;
-  const query = { id: element};
+  const query = { id: element };
   const myItem = await collection.findOne(query);
   return myItem;
 }
@@ -118,21 +118,21 @@ app.get("/Consumables", async (req, res) => {
   const collection = mongo.db("db_loot").collection("Consumables");
   const item = await getRandomDBItem(1, 6, collection);
   res.json(item);
-  console.log("Consumable retrieved! "+ item.name);
+  console.log("Consumable retrieved! " + item.name);
 });
 app.get("/Equipment", async (req, res) => {
   console.log("Equipment Requested...");
   const collection = mongo.db("db_loot").collection("Equipment");
   const item = await getRandomDBItem(1, 36, collection);
   res.json(item);
-  console.log("Equipment retrieved! "+item.name);
+  console.log("Equipment retrieved! " + item.name);
 });
 app.get("/Weapons", async (req, res) => {
   console.log("Weapon requested...");
   const collection = mongo.db("db_loot").collection("Weapons");
   const item = await getRandomDBItem(1, 8, collection);
   res.json(item);
-  console.log("Weapon retrieved! "+item.name);
+  console.log("Weapon retrieved! " + item.name);
 });
 app.get("/Mobs", async (req, res) => {
   console.log("Mob requested...");
@@ -150,6 +150,7 @@ app.get("/Events", async (req, res) => {
 });
 
 //handle username and password by checking the username against the db
+// deprecated, use /signup and /login instead
 app.post("/auth-name", async (req, res) => {
   console.log(req.url);
   let name = req.body.name;
@@ -158,28 +159,83 @@ app.post("/auth-name", async (req, res) => {
   console.log(pass);
 
   let exists = await findUser(name);
-  console.log("Exists is "+ exists.valueOf());
+  console.log("Exists is " + exists.valueOf());
   if (exists == false) {
     console.log("user does not exist... adding to db");
     addUser(name, pass);
-  } else if(exists == true) {
+  } else if (exists == true) {
     console.log("get fucked2");
-    const correctCredentials = loginUser(name, pass);
-  } else{
+    const user = loginUser(name, pass);
+  } else {
     console.log("get fucked");
   }
   res.end();
 });
 
+app.post("/signup", async (req, res) => {
+  let name = req.body.name;
+  let pass = req.body.pass;
+
+  // 400 bad request
+  if (!name || !pass) {
+    res.status(400).send("Missing username or password...");
+    return;
+  }
+
+  let exists = await findUser(name);
+  // 409 conflict in resource
+  if (exists) {
+    res.status(409).send("User already exists...");
+    return;
+  }
+
+  addUser(name, pass);
+  // 200 OK
+  res.status(200).send("Account created!");
+});
+
+app.post("/login", async (req, res) => {
+  let name = req.body.name;
+  let pass = req.body.pass;
+
+  // 400 bad request
+  if (!name || !pass) {
+    res.status(400).send("Missing username or password...");
+    return;
+  }
+
+  let exists = await findUser(name);
+  // 401 invalid credentials
+  if (!exists) {
+    res.status(401).send("User cannot be found...");
+    return;
+  }
+
+  let user = await loginUser(name, pass);
+  // 401 invalid credentials
+  if (!user) {
+    res.status(401).send("Invalid password...");
+    return;
+  }
+
+  // 200 OK
+  res.status(200).send(JSON.stringify({ userData: user }));
+});
+
+app.post("/logout", async (req, res) => {
+  // can do some stuff here, like remove user from a game 'session'
+  res.status(200).send("Logout success!");
+});
+
 //check to see if user exists in db
 async function findUser(name) {
   const collection = mongo.db("User_Info").collection("user");
-  const query = { Username: name};
+  const query = { Username: name };
   var myUser = await collection.findOne(query);
   //console.log(myUser);
 
-  if(myUser == null){
-    console.log("in finduser return set to false;")
+  if (myUser == null) {
+    console.log("in finduser return set to false;");
     myUser = false;
   } else {
     myUser = true;
@@ -191,14 +247,14 @@ async function findUser(name) {
 async function loginUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
   const query = { Username: name, Password: password };
-  const doesExist = await collection.findOne(query);
+  const user = await collection.findOne(query);
   //console.log("In loginUser doesExist == "+doesExist.valueOf());
-  if(doesExist){
-    console.log("Logging "+ name+" in.");
-    return true;
+  if (user) {
+    console.log("Logging " + name + " in.");
+    return user;
   } else {
-    console.log(name +" tried to login in with incorrect password "+password);
-    return false;
+    console.log(name + " tried to login in with incorrect password " + password);
+    return null;
   }
 }
 
@@ -219,8 +275,7 @@ async function addUser(name, password) {
     Equipment_Head: 0,
     Equipment_Weapon: 0,
     World_Current_Stage: 0,
-    World_Chaos_Level: 0
-
+    World_Chaos_Level: 0,
   });
   console.log("user added to db");
 }
@@ -241,7 +296,7 @@ Small_H: {number, P_h1Value},
 
 async function updateUser(name) {
   const collection = mongo.db("User_Info").collection("user");
-  await collection.findOne({Username: name})
+  await collection.findOne({ Username: name });
   await collection.insertOne({
     Username: name,
     Password: password,
@@ -255,10 +310,9 @@ async function updateUser(name) {
     Equipment_Chest: 0,
     Equipment_Arms: 0,
     Equipment_Head: 0,
-    Equipment_Weapon: 0
+    Equipment_Weapon: 0,
   });
 }
-
 
 // temp
 app.get("/", (req, res) => {

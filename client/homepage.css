@@ -53,12 +53,18 @@ body {
   outline: 1px solid #3c3c3c;
 }
 
-#begin-button {
-  padding: 10px;
+button {
+  width: 80px;
+  height: 30px;
+}
+
+#auth-buttons {
+  display: flex;
+  gap: 20px;
 }
 
 #loading-spinner {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   /* position: fixed; */
