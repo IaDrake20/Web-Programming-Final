@@ -20,48 +20,80 @@ const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: 7071 });
 // map of clients
 const clients = new Map();
+let numClients = 0;
+
+// index of the client who's turn it is
+let clientTurn = 0;
 
 // register callback for when a client connects
 wss.on("connection", (ws) => {
   console.log("client connected!");
-  const id = uuidv4();
-  const color = Math.floor(Math.random() * 360);
-  const metadata = { id, color };
+  const id = numClients++;
+  let turn = clientTurn == id;
+  const metadata = { id, turn };
 
   // associate a client with some data (an id and color)
   clients.set(ws, metadata);
 
+  // send an initial message to the client, with their turn status
+  // const clientsArray = Array.from(clients.values());
+  // const client = clientsArray[id];
+  // client.send({ id: id, msg: "Connected to server!", turn: turn });
+
   // register callback for when client sends a message to server
   ws.on("message", (messageAsString) => {
     const message = JSON.parse(messageAsString);
-    const metadata = clients.get(ws);
 
-    // attach additional data to the message to be sent to everyone
-    message.sender = metadata.id;
-    message.color = metadata.color;
+    // client ready message
+    if (message.msg === "ready") {
+      const clientKeysArray = [...clients.keys()];
+      const client = clientKeysArray[id];
+      client.send(
+        JSON.stringify({ id: id, sender: "server", msg: "Connected to server!", turn: turn })
+      );
+      return;
+    }
+    // end turn message
+    else if (message.msg === "end turn") {
+      const metadata = clients.get(ws);
+      clientTurn = (clientTurn + 1) % numClients;
+      console.log(clientTurn);
 
-    const outbound = JSON.stringify(message);
+      message.sender = metadata.id;
+      message.msg = "Ended their turn";
 
-    [...clients.keys()].forEach((client) => {
-      client.send(outbound);
-    });
+      [...clients.keys()].forEach((client) => {
+        const recieverMetadata = clients.get(client);
+        let myTurn = clientTurn == recieverMetadata.id;
+        console.log(myTurn, clientTurn, recieverMetadata.id);
+        message.turn = myTurn;
+        const outbound = JSON.stringify(message);
+        client.send(outbound);
+      });
+      return;
+    }
+    // basic message
+    else {
+      const metadata = clients.get(ws);
+
+      // attach additional data to the message to be sent to everyone
+      message.sender = metadata.id;
+
+      const outbound = JSON.stringify(message);
+
+      [...clients.keys()].forEach((client) => {
+        client.send(outbound);
+      });
+    }
   });
 
   // register callback for when client quits
   ws.on("close", () => {
     console.log("client left");
+    numClients--;
     clients.delete(ws);
   });
 });
-
-// generate a id
-function uuidv4() {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
 
 let mongo;
 

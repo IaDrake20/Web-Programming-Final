@@ -81,11 +81,12 @@ logoutButton.addEventListener("click", async () => {
 
 // just simply move to game page for now
 playSoloButton.addEventListener("click", async () => {
-  window.location.href = "/";
+  window.location.href = `/`;
 });
 
 playOnlineButton.addEventListener("click", async () => {
-  window.location.href = "/";
+  const sessionId = 1;
+  window.location.href = `/${sessionId}`;
 });
 
 const login = async () => {
