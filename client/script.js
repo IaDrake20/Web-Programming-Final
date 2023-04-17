@@ -68,17 +68,33 @@ const sessionId = window.location.pathname.split("/").pop();
 
 // initialize player_stats object
 let player_stats = {
-  hp_max: 100,
-  hp_current: 100,
-  mana_current: 50,
-  mana_max: 50,
-  ap_current: 4,
-  ap_max: 4,
-  xp_current: 0,
-  xp_threshold: 25,
-  character_level_current: 1,
-  character_level_max: 10,
-  score: 69,
+    hp_max: 100,
+    hp_current: 100,
+    mana_current: 50,
+    mana_max: 50,
+    ap_current: 4,
+    ap_max: 4,
+    xp_current: 0,
+    xp_threshold: 25,
+    character_level_current: 1,
+    score: 69,
+    user = {
+      Username: name,
+      Password: password,
+      Small_H: 0,
+      Medium_H: 0,
+      Large_H: 0,
+      Small_M: 0,
+      Medium_M: 0,
+      Large_M: 0,
+      Equipment_Feet: 0,
+      Equipment_Chest: 0,
+      Equipment_Arms: 0,
+      Equipment_Head: 0,
+      Equipment_Weapon: 0,
+      World_Current_Stage: 0,
+      World_Chaos_Level: 0,
+    }
 };
 
 let ws;
@@ -171,6 +187,7 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
+
         value = null;
       });
   } else if (value === "weapon") {
@@ -181,6 +198,7 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
+        
         value = null;
       });
   } else if (value === "consumable") {
@@ -197,42 +215,42 @@ const handleInput = (event) => {
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // health-s ++
+            player_stats.Small_H++;
             break;
           case 2:
             currConsumable = document.querySelectorAll("#health-m");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // health-m ++
+            player_stats.Medium_H++;
             break;
           case 3:
             currConsumable = document.querySelectorAll("#health-l");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // health-l ++
+            player_stats.Large_H++;
             break;
           case 4:
             currConsumable = document.querySelectorAll("#mana-s");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // mana-s ++
+            player_stats.Small_M++;
             break;
           case 5:
             currConsumable = document.querySelectorAll("#mana-m");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // mana-m ++
+            player_stats.Medium_M++;
             break;
           case 6:
             currConsumable = document.querySelectorAll("#mana-l");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            // mana-l ++
+            player_stats.Large_M++;
             break;
         }
         value = null;
@@ -266,21 +284,23 @@ const handleInput = (event) => {
 
 // Function to enter combat
 const Combat = () => {
-  if (!checkTurn()) return;
   exploreDiv.style.display = "none";
   combatDiv.style.display = "flex";
   player_stats.ap_current = player_stats.ap_max;
   fetch("http://localhost:3001/Mobs")
     .then((response) => response.json())
     .then((data) => {
-      console.log(data.description);
+      const p = document.createElement("p");
+      p.innerText = data.description;
+      middleDiv.appendChild(p);
     });
 };
 
 // Function to exit combat
 const Escape = () => {
-  if (!checkTurn()) return;
-  console.log("Escape");
+  const p = document.createElement("p");
+  p.innerText = "You Have Escaped.";
+  middleDiv.appendChild(p);
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
 };
@@ -289,8 +309,10 @@ const Escape = () => {
 const Attack = () => {
   if (!checkTurn()) return;
   player_stats.ap_current -= 1;
-  console.log("Enemy Damage");
-
+  damage = calcDamage();
+  const p = document.createElement("p");
+  p.innerText = enemy.name + " took " + damage + " damage.";
+  middleDiv.appendChild(p);
   updatePlayerStats();
 };
 
@@ -383,13 +405,13 @@ const Consume1 = () => {
   } else {
     player_stats.hp_current += 20;
   }
-  // health-s --
-  // if(health-s == 0) {
-  currConsumable = document.querySelectorAll("#health-s");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+  player_stats.Small_H--;
+  if(player_stats.Small_H === 0) {
+    currConsumable = document.querySelectorAll("#health-s");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  }
   updatePlayerStats();
 };
 
@@ -400,13 +422,13 @@ const Consume2 = () => {
   } else {
     player_stats.hp_current += 50;
   }
-  // health-m --
-  // if(health-m == 0) {
-  currConsumable = document.querySelectorAll("#health-m");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+  player_stats.Medium_H--
+  if(player_stats.Medium_H === 0) {
+    currConsumable = document.querySelectorAll("#health-m");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    }); 
+  }
   updatePlayerStats();
 };
 
@@ -417,13 +439,13 @@ const Consume3 = () => {
   } else {
     player_stats.hp_current += 100;
   }
-  // health-l --
-  // if(health-l == 0) {
-  currConsumable = document.querySelectorAll("#health-l");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+  player_stats.Large_H--
+  if(player_stats.Large_H === 0) {
+    currConsumable = document.querySelectorAll("#health-l");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  }
   updatePlayerStats();
 };
 
@@ -434,13 +456,13 @@ const Consume4 = () => {
   } else {
     player_stats.mana_current += 10;
   }
-  // mana-s --
-  // if(mana-s == 0) {
-  currConsumable = document.querySelectorAll("#mana-s");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+  player_stats.Small_M--;
+  if((player_stats.Small_M === 0)) {
+    currConsumable = document.querySelectorAll("#mana-s");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  }
   updatePlayerStats();
 };
 
@@ -451,13 +473,13 @@ const Consume5 = () => {
   } else {
     player_stats.mana_current += 25;
   }
-  // mana-m --
-  // if(mana-m == 0) {
-  currConsumable = document.querySelectorAll("#mana-m");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+    player_stats.Medium_M--;
+  if(player_stats.Medium_M === 0) {
+    currConsumable = document.querySelectorAll("#mana-m");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  }
   updatePlayerStats();
 };
 
@@ -468,13 +490,13 @@ const Consume6 = () => {
   } else {
     player_stats.mana_current += 50;
   }
-  // mana-l --
-  // if(mana-l == 0) {
-  currConsumable = document.querySelectorAll("#mana-l");
-  currConsumable.forEach((consumable) => {
-    consumable.style.display = "none";
-  });
-  // }
+  player_stats.Large_M--;
+  if (player_stats.Large_M === 0) {
+    currConsumable = document.querySelectorAll("#mana-l");
+    currConsumable.forEach((consumable) => {
+      consumable.style.display = "none";
+    });
+  }
   updatePlayerStats();
 };
 
