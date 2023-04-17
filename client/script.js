@@ -32,6 +32,7 @@ const consumeButton3 = document.querySelectorAll("#health-l");
 const consumeButton4 = document.querySelectorAll("#mana-s");
 const consumeButton5 = document.querySelectorAll("#mana-m");
 const consumeButton6 = document.querySelectorAll("#mana-l");
+const saveButton = document.querySelector("#save");
 
 // attach event listeners
 attackButton.addEventListener("click", () => Attack());
@@ -78,16 +79,14 @@ let player_stats = {
     xp_threshold: 25,
     character_level_current: 1,
     score: 69,
-    user = {
-      Username: name,
-      Password: password,
+    user: {
       Small_H: 0,
       Medium_H: 0,
       Large_H: 0,
       Small_M: 0,
       Medium_M: 0,
       Large_M: 0,
-      Equipment_Feet: 0,
+      Equipment_Legs: 0,
       Equipment_Chest: 0,
       Equipment_Arms: 0,
       Equipment_Head: 0,
@@ -144,6 +143,10 @@ const checkTurn = () => {
   return true;
 };
 
+const Save = () => {
+
+}
+
 const handleInput = (event) => {
   event.preventDefault();
 
@@ -187,7 +190,20 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
-
+          switch (data.position) {
+              case "legs":
+                  player_stats.user.Equipment_Legs = data;
+                  break;
+              case "arms":
+                  player_stats.user.Equipment_Arms = data;
+                  break;
+              case "chest":
+                  player_stats.user.Equipment_Chest = data;
+                  break;
+              case "head":
+                  player_stats.user.Equipment_Head = data;
+                  break;
+          }
         value = null;
       });
   } else if (value === "weapon") {
@@ -198,7 +214,7 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
-        
+        player_stats.user.Equipment_Weapon = data;
         value = null;
       });
   } else if (value === "consumable") {
@@ -267,12 +283,99 @@ const handleInput = (event) => {
     if (player_stats.mana_current < player_stats.mana_max) {
       player_stats.mana_current++;
     }
+
+    if (Math.random() < 0.5) {
+      fetch("http://localhost:3001/Events")
+      .then((response) => response.json())
+      .then((event) => {
+        const p = document.createElement("p");
+        p.innerText = data.description;
+        middleDiv.appendChild(p);
+
+        switch (data.id) {
+        case 1: // Treasure
+              
+            break;
+        case 2: // Demon King Altar 
+
+            break;
+        case 3: // Trap
+
+            break;
+        case 4: // Thief
+
+            break;
+        case 5: // Caravan
+
+            break;
+        case 6: // Ohl
+
+            break;
+        case 7: // Mine
+
+            break;
+        }
+          
+      });
+    }
   } else if (value === "search") {
     p.style.color = "skyblue";
+      if (Math.random < 0.5) {
+
+      }
+      else {
+          const inv = document.createElement("p");
+          inv.innerText = "You Didn't Find Anything Useful.";
+          middleDiv.appendChild(inv);
+      }
   } else if (value === "hunt") {
     p.style.display = "none";
     Combat();
-  } else {
+  } else if (value === "inventory") {
+      p.style.display = "none";
+      invH = document.createElement("p");
+      invC = document.createElement("p");
+      invA = document.createElement("p");
+      invL = document.createElement("p");
+      invW = document.createElement("p");
+    if (player_stats.user.Equipment_Head != 0) {
+      invH.innerText = "Helmet: " + player_stats.user.Equipment_Head.name;
+    }
+    else {
+      invH.innerText = "Helmet: None";
+    }
+    if (player_stats.user.Equipment_Chest != 0) {
+      invC.innerText = "Chest: " + player_stats.user.Equipment_Chest.name;
+    }
+    else {
+      invC.innerText = "Chest: None";
+    }
+    if (player_stats.user.Equipment_Arms != 0) {
+      invA.innerText = "Arms: " + player_stats.user.Equipment_Arms.name;
+    }
+    else {
+      invA.innerText = "Arms: None";
+    }
+    if (player_stats.user.Equipment_Legs != 0) {
+      invL.innerText = "Legs: " + player_stats.user.Equipment_Legs.name;
+    }
+    else {
+      invL.innerText = "Legs: None";
+    }
+    if (player_stats.user.Equipment_Weapon != 0) {
+      invW.innerText = "Weapon: " + player_stats.user.Equipment_Weapon.name;
+    }
+    else {
+      invW.innerText = "Weapon: None";
+    }
+    middleDiv.appendChild(invH);
+    middleDiv.appendChild(invC);
+    middleDiv.appendChild(invA);
+    middleDiv.appendChild(invL);
+    middleDiv.appendChild(invW);
+  }
+
+  else {
     value = "Invalid Command";
   }
   p.innerText = value;
@@ -280,11 +383,14 @@ const handleInput = (event) => {
   updatePlayerStats();
 
   middleDiv.appendChild(p);
+
+  actionInput.value = null;
 };
 
 // Function to enter combat
 const Combat = () => {
   exploreDiv.style.display = "none";
+  saveButton.style.display = "none";
   combatDiv.style.display = "flex";
   player_stats.ap_current = player_stats.ap_max;
   fetch("http://localhost:3001/Mobs")
@@ -303,6 +409,7 @@ const Escape = () => {
   middleDiv.appendChild(p);
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
+  saveButton.style.display = "flex";
 };
 
 // Attack Function
