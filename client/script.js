@@ -32,9 +32,10 @@ const consumeButton3 = document.querySelectorAll("#health-l");
 const consumeButton4 = document.querySelectorAll("#mana-s");
 const consumeButton5 = document.querySelectorAll("#mana-m");
 const consumeButton6 = document.querySelectorAll("#mana-l");
-const saveButton = document.querySelector("#save");
+const saveButton = document.querySelector("#save-button");
 
 // attach event listeners
+saveButton.addEventListener("click", () => Save());
 attackButton.addEventListener("click", () => Attack());
 magicButton1.addEventListener("click", () => Magic1());
 magicButton2.addEventListener("click", () => Magic2());
@@ -69,31 +70,48 @@ const sessionId = window.location.pathname.split("/").pop();
 
 // initialize player_stats object
 let player_stats = {
-    hp_max: 100,
-    hp_current: 100,
-    mana_current: 50,
-    mana_max: 50,
-    ap_current: 4,
-    ap_max: 4,
-    xp_current: 0,
-    xp_threshold: 25,
-    character_level_current: 1,
-    score: 69,
-    user: {
-      Small_H: 0,
-      Medium_H: 0,
-      Large_H: 0,
-      Small_M: 0,
-      Medium_M: 0,
-      Large_M: 0,
-      Equipment_Legs: 0,
-      Equipment_Chest: 0,
-      Equipment_Arms: 0,
-      Equipment_Head: 0,
-      Equipment_Weapon: 0,
-      World_Current_Stage: 0,
-      World_Chaos_Level: 0,
-    }
+  hp_max: 100,
+  hp_current: 100,
+  mana_current: 50,
+  mana_max: 50,
+  ap_current: 4,
+  ap_max: 4,
+  xp_current: 0,
+  xp_threshold: 25,
+  strength: 10,
+  character_level_current: 1,
+  score: 69,
+  user: {
+    Small_H: 0,
+    Medium_H: 0,
+    Large_H: 0,
+    Small_M: 0,
+    Medium_M: 0,
+    Large_M: 0,
+    Equipment_Legs: 0,
+    Equipment_Chest: 0,
+    Equipment_Arms: 0,
+    Equipment_Head: 0,
+    Equipment_Weapon: 0,
+    World_Current_Stage: 0,
+    World_Chaos_Level: 0,
+  }
+};
+
+let enemy_stats = {
+  name: 0,
+  attack: 0,
+  defense: 0,
+  health_current: 0,
+  health_max: 0
+};
+
+const enemyGeneration = (enemy) => {
+  enemy_stats.name = enemy.name;
+  enemy_stats.attack = enemy.attack;
+  enemy_stats.defense = enemy.defense;
+  enemy_stats.health_max = enemy.health;
+  enemy_stats.health_current = enemy.health;
 };
 
 let ws;
@@ -144,7 +162,7 @@ const checkTurn = () => {
 };
 
 const Save = () => {
-
+    console.log("save");
 }
 
 const handleInput = (event) => {
@@ -190,19 +208,19 @@ const handleInput = (event) => {
         itemP.innerText = data.name;
         itemP.style.color = "violet";
         middleDiv.appendChild(itemP);
-          switch (data.position) {
-              case "legs":
-                  player_stats.user.Equipment_Legs = data;
-                  break;
-              case "arms":
-                  player_stats.user.Equipment_Arms = data;
-                  break;
-              case "chest":
-                  player_stats.user.Equipment_Chest = data;
-                  break;
-              case "head":
-                  player_stats.user.Equipment_Head = data;
-                  break;
+        switch (data.position) {
+          case "legs":
+            player_stats.user.Equipment_Legs = data;
+            break;
+          case "arms":
+            player_stats.user.Equipment_Arms = data;
+            break;
+          case "chest":
+            player_stats.user.Equipment_Chest = data;
+            break;
+          case "head":
+            player_stats.user.Equipment_Head = data;
+            break;
           }
         value = null;
       });
@@ -320,24 +338,24 @@ const handleInput = (event) => {
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
-      if (Math.random < 0.5) {
+    if (Math.random < 0.5) {
 
-      }
-      else {
-          const inv = document.createElement("p");
-          inv.innerText = "You Didn't Find Anything Useful.";
-          middleDiv.appendChild(inv);
-      }
+    }
+    else {
+        const inv = document.createElement("p");
+        inv.innerText = "You Didn't Find Anything Useful.";
+        middleDiv.appendChild(inv);
+    }
   } else if (value === "hunt") {
     p.style.display = "none";
     Combat();
   } else if (value === "inventory") {
-      p.style.display = "none";
-      invH = document.createElement("p");
-      invC = document.createElement("p");
-      invA = document.createElement("p");
-      invL = document.createElement("p");
-      invW = document.createElement("p");
+    p.style.display = "none";
+    invH = document.createElement("p");
+    invC = document.createElement("p");
+    invA = document.createElement("p");
+    invL = document.createElement("p");
+    invW = document.createElement("p");
     if (player_stats.user.Equipment_Head != 0) {
       invH.innerText = "Helmet: " + player_stats.user.Equipment_Head.name;
     }
@@ -396,6 +414,7 @@ const Combat = () => {
   fetch("http://localhost:3001/Mobs")
     .then((response) => response.json())
     .then((data) => {
+      enemyGeneration(data);
       const p = document.createElement("p");
       p.innerText = data.description;
       middleDiv.appendChild(p);
@@ -416,10 +435,8 @@ const Escape = () => {
 const Attack = () => {
   if (!checkTurn()) return;
   player_stats.ap_current -= 1;
-  damage = calcDamage();
-  const p = document.createElement("p");
-  p.innerText = enemy.name + " took " + damage + " damage.";
-  middleDiv.appendChild(p);
+  calcDamage("Enemy");
+  
   updatePlayerStats();
 };
 
@@ -607,9 +624,95 @@ const Consume6 = () => {
   updatePlayerStats();
 };
 
+const calcDamage = (target) => {
+  damageMult = Math.random;
+
+  if (target === "Enemy") {
+    if (damageMult > .95) { // Crit
+      damage = 2 * ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+    }
+    if (damageMult < .05) { // Miss
+      damage = 0;
+    }
+    else {
+      damage = ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+    }
+    inflictDamage("Enemy", damage);
+    }
+  if (target === "Player") {
+    player_defense = 0;
+
+    if (player_stats.Equipment_Head != 0) {
+      player_defense += (player_stats.Equipment_Head.value);
+    }
+    if (player_stats.Equipment_Chest != 0) {
+      player_defense += (player_stats.Equipment_Chest.value);
+    }
+    if (player_stats.Equipment_Arms != 0) {
+      player_defense += (player_stats.Equipment_Arms.value);
+    }
+    if (player_stats.Equipment_Legs != 0) {
+      player_defense += (player_stats.Equipment_Legs.value);
+    }
+    if (damageMult > .95) { // Crit
+      damage = 2 * (enemy_stats.attack - player_defense);
+    }
+    if (damageMult < .05) { // Miss
+      damage = 0;
+    }
+    else {
+      damage = (enemy_stats.attack - player_defense);
+    }
+    inflictDamage("Player", damage);
+  }
+}
+
+const inflictDamage = (target, damage) => {
+  if (target === "Enemy") {
+    if ((enemy_stats.health_current - damage) > 0) {
+        enemy_stats.health_current -= damage;
+        const p = document.createElement("p");
+        p.innerText = enemy.name, " took ", damage, " damage.";
+        middleDiv.appendChild(p);
+    }
+    else {
+      enemy_stats.health_current = 0;
+      endCombat();
+    }
+  }
+  if (target === "Player") {
+    if ((player_stats.hp_current - damage) > 0) {
+        player_stats.hp_current -= damage;
+        const p = document.createElement("p");
+        p.innerText = You, " took ", damage, " damage.";
+        middleDiv.appendChild(p);
+    }
+    else {
+      player_stats.hp_current = 0;
+      playerDeath();
+    }
+  }
+}
+
+const endCombat = () => {
+
+
+}
+
+const playerDeath = () => {
+
+
+}
+
 const endTurn = () => {
   console.log("end turn");
-  player_stats.ap_current += player_stats.ap_max;
+  player_stats.ap_current = player_stats.ap_max;
+  if (player_stats.mana_current < ((player_stats.mana_max) * .9)) {
+    player_stats.mana_current += ((player_stats.mana_max) / 10);
+  }
+  else {
+    player_stats.mana_current = player_stats.mana_max;
+  }
   updatePlayerStats();
 
   // if solo, do not do the multiplayer stuff
