@@ -831,7 +831,15 @@ const recieveMessage = (msg) => {
     case "chat":
       recieveChatMsg(body);
       break;
+
+    default:
+      recieveDefaultMsg(header, body);
+      break;
   }
+};
+
+const recieveDefaultMsg = (header, data) => {
+  console.log(`Message recieved! header=${header}, body=${data}`);
 };
 
 const recieveInitMsg = (data) => {

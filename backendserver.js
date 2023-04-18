@@ -138,15 +138,21 @@ const handleServerMessage = (header, body, senderMeta) => {
 };
 
 const handleAllMessage = (header, body, senderMeta) => {
-  const sender = senderMeta.id;
+  // initialize empty body if none was provided
+  if (!body) {
+    body = {};
+  }
+  body.sender = senderMeta.id;
+
+  // if extra functionality is needed, can define a case for your specific message
+  // otherwise, server just relays message directly to other clients
   switch (header) {
-    case "chat":
-      const msg = body.msg;
-      sendToAllClients("chat", { sender, msg });
-      break;
     case "end turn":
       clientTurn = (clientTurn + 1) % numClients;
-      sendToAllClients("turn", { sender, turn: clientTurn });
+      body.turn = clientTurn;
+      sendToAllClients("turn", body);
+    default:
+      sendToAllClients(header, body);
   }
 };
 
