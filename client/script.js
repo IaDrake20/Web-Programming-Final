@@ -95,7 +95,7 @@ let player_stats = {
     Equipment_Weapon: 0,
     World_Current_Stage: 0,
     World_Chaos_Level: 0,
-  }
+  },
 };
 
 let enemy_stats = {
@@ -103,7 +103,7 @@ let enemy_stats = {
   attack: 0,
   defense: 0,
   health_current: 0,
-  health_max: 0
+  health_max: 0,
 };
 
 const enemyGeneration = (enemy) => {
@@ -165,7 +165,7 @@ const checkTurn = () => {
 
 const Save = () => {
   console.log("save");
-}
+};
 
 const handleInput = (event) => {
   event.preventDefault();
@@ -223,7 +223,7 @@ const handleInput = (event) => {
           case "head":
             player_stats.user.Equipment_Head = data;
             break;
-          }
+        }
         value = null;
       });
   } else if (value === "weapon") {
@@ -306,93 +306,78 @@ const handleInput = (event) => {
 
     if (Math.random() < 0.5) {
       fetch("http://localhost:3001/Events")
-      .then((response) => response.json())
-      .then((event) => {
-        const p = document.createElement("p");
-        p.innerText = event.description;
-        middleDiv.appendChild(p);
+        .then((response) => response.json())
+        .then((event) => {
+          const p = document.createElement("p");
+          p.innerText = event.description;
+          middleDiv.appendChild(p);
 
-        switch (event.id) {
-        case 1: // Treasure
-              
-            break;
-        case 2: // Demon King Altar 
-
-            break;
-        case 3: // Trap
-
-            break;
-        case 4: // Thief
-
-            break;
-        case 5: // Caravan
-
-            break;
-        case 6: // Ohl
-
-            break;
-        case 7: // Mine
-
-            break;
-        }
-      });
+          switch (event.id) {
+            case 1: // Treasure
+              break;
+            case 2: // Demon King Altar
+              break;
+            case 3: // Trap
+              break;
+            case 4: // Thief
+              break;
+            case 5: // Caravan
+              break;
+            case 6: // Ohl
+              break;
+            case 7: // Mine
+              break;
+          }
+        });
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
     if (Math.random() < 0.5) {
       fetch("http://localhost:3001/Consumables")
-      .then((response) => response.json())
-      .then((data) => {
-
-      });
-    }
-    else {
+        .then((response) => response.json())
+        .then((data) => {});
+    } else {
       fetch("http://localhost:3001/Consumables")
         .then((response) => response.json())
         .then((data) => {
           const inv = document.createElement("p");
           inv.innerText = "You Didn't Find Anything Useful.";
           middleDiv.appendChild(inv);
-      }); 
+        });
     }
   } else if (value === "hunt") {
-      p.style.display = "none";
-      Combat();
+    p.style.display = "none";
+    Combat();
   } else if (value === "inventory") {
-      p.style.display = "none";
-      invH = document.createElement("p");
-      invC = document.createElement("p");
-      invA = document.createElement("p");
-      invL = document.createElement("p");
-      invW = document.createElement("p");
+    p.style.display = "none";
+    invH = document.createElement("p");
+    invC = document.createElement("p");
+    invA = document.createElement("p");
+    invL = document.createElement("p");
+    invW = document.createElement("p");
     if (player_stats.user.Equipment_Head != 0) {
       invH.innerText = "Helmet: " + player_stats.user.Equipment_Head.name;
-    }
-    else {
+    } else {
       invH.innerText = "Helmet: None";
     }
     if (player_stats.user.Equipment_Chest != 0) {
       invC.innerText = "Chest: " + player_stats.user.Equipment_Chest.name;
-    }
-    else {
+    } else {
       invC.innerText = "Chest: None";
     }
     if (player_stats.user.Equipment_Arms != 0) {
       invA.innerText = "Arms: " + player_stats.user.Equipment_Arms.name;
-    }
-    else {
+    } else {
       invA.innerText = "Arms: None";
     }
     if (player_stats.user.Equipment_Legs != 0) {
       invL.innerText = "Legs: " + player_stats.user.Equipment_Legs.name;
-    }
-    else {
+    } else {
       invL.innerText = "Legs: None";
     }
     if (player_stats.user.Equipment_Weapon != 0) {
       invW.innerText = "Weapon: " + player_stats.user.Equipment_Weapon.name;
-    }
-    else {
+    } else {
       invW.innerText = "Weapon: None";
     }
     middleDiv.appendChild(invH);
@@ -400,9 +385,7 @@ const handleInput = (event) => {
     middleDiv.appendChild(invA);
     middleDiv.appendChild(invL);
     middleDiv.appendChild(invW);
-  }
-
-  else {
+  } else {
     value = "Invalid Command";
   }
   p.innerText = value;
@@ -411,7 +394,8 @@ const handleInput = (event) => {
 
   middleDiv.appendChild(p);
 
-  actionInput.value = null;
+  sendMsgToOthers({ msg: value });
+  actionInput.value = "";
 };
 
 // Function to enter combat
@@ -447,7 +431,7 @@ const Attack = () => {
   if (!checkTurn()) return;
   player_stats.ap_current -= 1;
   calcDamage("Enemy");
-  
+
   updatePlayerStats();
 };
 
@@ -526,14 +510,21 @@ const Run = () => {
 
 // Investigate Function
 const Investigate = () => {
-    if (!checkTurn()) return;
-    player_stats.ap_current -= 1;
+  if (!checkTurn()) return;
+  player_stats.ap_current -= 1;
 
   const data = document.createElement("p");
-    data.innerText = ("Enemy: " + enemy_stats.name +
-        " Health: [" + enemy_stats.health_current + "/" + enemy_stats.health_max +
-        "] Attack: " + enemy_stats.attack +
-        " Defense: " + enemy_stats.defense);
+  data.innerText =
+    "Enemy: " +
+    enemy_stats.name +
+    " Health: [" +
+    enemy_stats.health_current +
+    "/" +
+    enemy_stats.health_max +
+    "] Attack: " +
+    enemy_stats.attack +
+    " Defense: " +
+    enemy_stats.defense;
   middleDiv.appendChild(data);
 
   updatePlayerStats();
@@ -547,7 +538,7 @@ const Consume1 = () => {
     player_stats.hp_current += 20;
   }
   player_stats.Small_H--;
-  if(player_stats.Small_H === 0) {
+  if (player_stats.Small_H === 0) {
     currConsumable = document.querySelectorAll("#health-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -563,12 +554,12 @@ const Consume2 = () => {
   } else {
     player_stats.hp_current += 50;
   }
-  player_stats.Medium_H--
-  if(player_stats.Medium_H === 0) {
+  player_stats.Medium_H--;
+  if (player_stats.Medium_H === 0) {
     currConsumable = document.querySelectorAll("#health-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
-    }); 
+    });
   }
   updatePlayerStats();
 };
@@ -580,8 +571,8 @@ const Consume3 = () => {
   } else {
     player_stats.hp_current += 100;
   }
-  player_stats.Large_H--
-  if(player_stats.Large_H === 0) {
+  player_stats.Large_H--;
+  if (player_stats.Large_H === 0) {
     currConsumable = document.querySelectorAll("#health-l");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -598,7 +589,7 @@ const Consume4 = () => {
     player_stats.mana_current += 10;
   }
   player_stats.Small_M--;
-  if((player_stats.Small_M === 0)) {
+  if (player_stats.Small_M === 0) {
     currConsumable = document.querySelectorAll("#mana-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -614,8 +605,8 @@ const Consume5 = () => {
   } else {
     player_stats.mana_current += 25;
   }
-    player_stats.Medium_M--;
-  if(player_stats.Medium_M === 0) {
+  player_stats.Medium_M--;
+  if (player_stats.Medium_M === 0) {
     currConsumable = document.querySelectorAll("#mana-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -645,23 +636,24 @@ const calcDamage = (target) => {
   damageMult = Math.random();
   damage = 0;
   if (target === "Enemy") {
-    if (damageMult > .95) { // Crit
+    if (damageMult > 0.95) {
+      // Crit
       if (player_stats.user.Equipment_Weapon != 0) {
-        damage = 2 * ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+        damage =
+          2 *
+          (player_stats.strength + player_stats.user.Equipment_Weapon.value - enemy_stats.defense);
+      } else {
+        damage = 2 * (player_stats.strength - enemy_stats.defense);
       }
-      else {
-        damage = 2 * ((player_stats.strength) - enemy_stats.defense)
-      }
-    }
-    else if (damageMult < .05) { // Miss
+    } else if (damageMult < 0.05) {
+      // Miss
       damage = 0;
-    }
-    else {
+    } else {
       if (player_stats.user.Equipment_Weapon != 0) {
-        damage = ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
-      }
-      else {
-        damage = ((player_stats.strength) - enemy_stats.defense);
+        damage =
+          player_stats.strength + player_stats.user.Equipment_Weapon.value - enemy_stats.defense;
+      } else {
+        damage = player_stats.strength - enemy_stats.defense;
       }
     }
     if (damage < 0) {
@@ -670,42 +662,42 @@ const calcDamage = (target) => {
     inflictDamage("Enemy", damage);
   }
   if (target === "Player") {
-    player_defense = 0; 
+    player_defense = 0;
 
     if (player_stats.user.Equipment_Head != 0) {
-      player_defense += (player_stats.Equipment_Head.value);
+      player_defense += player_stats.Equipment_Head.value;
     }
     if (player_stats.user.Equipment_Chest != 0) {
-      player_defense += (player_stats.Equipment_Chest.value);
+      player_defense += player_stats.Equipment_Chest.value;
     }
     if (player_stats.user.Equipment_Arms != 0) {
-      player_defense += (player_stats.Equipment_Arms.value);
+      player_defense += player_stats.Equipment_Arms.value;
     }
     if (player_stats.user.Equipment_Legs != 0) {
-      player_defense += (player_stats.Equipment_Legs.value);
+      player_defense += player_stats.Equipment_Legs.value;
     }
-    if (damageMult > .95) { // Crit
+    if (damageMult > 0.95) {
+      // Crit
       damage = 2 * (enemy_stats.attack - player_defense);
     }
-    if (damageMult < .05) { // Miss
+    if (damageMult < 0.05) {
+      // Miss
       damage = 0;
-    }
-    else {
-      damage = (enemy_stats.attack - player_defense);
+    } else {
+      damage = enemy_stats.attack - player_defense;
     }
     inflictDamage("Player", damage);
   }
-}
+};
 
 const inflictDamage = (target, damage) => {
   if (target === "Enemy") {
-    if ((enemy_stats.health_current - damage) > 0) {
+    if (enemy_stats.health_current - damage > 0) {
       enemy_stats.health_current -= damage;
       const dam = document.createElement("p");
       dam.innerText = enemy_stats.name + " took " + damage + " points of damage.";
       middleDiv.appendChild(dam);
-    }
-    else {
+    } else {
       enemy_stats.health_current = 0;
       const dam = document.createElement("p");
       dam.innerText = enemy_stats.name + " took " + damage + " points of lethal damage.";
@@ -714,13 +706,12 @@ const inflictDamage = (target, damage) => {
     }
   }
   if (target === "Player") {
-    if ((player_stats.hp_current - damage) > 0) {
+    if (player_stats.hp_current - damage > 0) {
       player_stats.hp_current -= damage;
       const dam = document.createElement("p");
       dam.innerText = "You took " + damage + " points of damage.";
       middleDiv.appendChild(dam);
-    }
-    else {
+    } else {
       player_stats.hp_current = 0;
       const dam = document.createElement("p");
       dam.innerText = "You took " + damage + " points of lethal damage.";
@@ -728,31 +719,29 @@ const inflictDamage = (target, damage) => {
       playerDeath();
     }
   }
-}
+};
 
 const endCombat = () => {
-    
-    Escape();
-}
+  Escape();
+};
 
 const playerDeath = () => {
-    console.log("you died");
-    player_stats.hp_current = 1;
-    player_stats.mana_current = 1;
-    player_stats.score -= 100;
-    updatePlayerStats();
-    Escape();
-}
+  console.log("you died");
+  player_stats.hp_current = 1;
+  player_stats.mana_current = 1;
+  player_stats.score -= 100;
+  updatePlayerStats();
+  Escape();
+};
 
 const endTurn = () => {
   console.log("end turn");
   player_stats.ap_current = player_stats.ap_max;
-  if (player_stats.mana_current < ((player_stats.mana_max) * .9)) {
-    player_stats.mana_current += ((player_stats.mana_max) / 10);
-  }
-  else {
+  if (player_stats.mana_current < player_stats.mana_max * 0.9) {
+    player_stats.mana_current += player_stats.mana_max / 10;
+  } else {
     player_stats.mana_current = player_stats.mana_max;
-   }
+  }
   if (inCombat) {
     calcDamage("Player");
     calcDamage("Player");
@@ -767,18 +756,23 @@ const endTurn = () => {
   ws.send(JSON.stringify({ msg: "end turn" }));
 };
 
-// web socket stuff
-async function websocketstuff() {
-  ws = await connectToServer();
-
-  // temp way to send messages, only works when clicking submit
-  submitButton.addEventListener("click", (e) => {
-    const messageBody = actionInput.value;
-    actionInput.value = "";
-    ws.send(JSON.stringify({ msg: messageBody }));
+async function sendMsgToOthers(msg) {
+  if (!sessionId) return;
+  await ws.send(JSON.stringify({ msg: msg }));
+}
+async function connectToServer() {
+  const wsLoading = new WebSocket("ws://localhost:7071/ws");
+  const promise = new Promise((resolve, reject) => {
+    const timer = setInterval(() => {
+      if (wsLoading.readyState === 1) {
+        clearInterval(timer);
+        resolve(wsLoading);
+      }
+    }, 10);
   });
 
-  // when receiving messages...
+  ws = await promise;
+
   ws.onmessage = (webSocketMessage) => {
     console.log("recieved message!");
     const messageBody = JSON.parse(webSocketMessage.data);
@@ -809,22 +803,10 @@ async function websocketstuff() {
   ws.send(JSON.stringify({ msg: "ready" }));
 }
 
-async function connectToServer() {
-  const ws = new WebSocket("ws://localhost:7071/ws");
-  return new Promise((resolve, reject) => {
-    const timer = setInterval(() => {
-      if (ws.readyState === 1) {
-        clearInterval(timer);
-        resolve(ws);
-      }
-    }, 10);
-  });
-}
-
 // only do web sockets if user opted to play online
 if (sessionId) {
   console.log("Online game: Initializing web sockets...");
-  websocketstuff();
+  connectToServer();
 } else {
   turn = true;
 }
