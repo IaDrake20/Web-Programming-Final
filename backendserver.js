@@ -151,8 +151,14 @@ const handleAllMessage = (header, body, senderMeta) => {
       clientTurn = (clientTurn + 1) % numClients;
       body.turn = clientTurn;
       sendToAllClients("turn", body);
+      break;
+    case "wstest":
+      body.color = "red";
+      sendToAllClients(header, body);
+      break;
     default:
       sendToAllClients(header, body);
+      break;
   }
 };
 

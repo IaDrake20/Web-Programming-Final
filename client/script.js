@@ -385,6 +385,10 @@ const handleInput = (event) => {
     middleDiv.appendChild(invA);
     middleDiv.appendChild(invL);
     middleDiv.appendChild(invW);
+  } else if (value === "wstest") {
+    sendMsgToAll("wstest", { color: "blue" });
+    actionInput.value = "";
+    return;
   } else {
     value = "Invalid Command";
   }
@@ -832,10 +836,18 @@ const receiveMessage = (msg) => {
       receiveChatMsg(body);
       break;
 
+    case "wstest":
+      receiveTestMsg(body);
+      break;
+
     default:
       receiveDefaultMsg(header, body);
       break;
   }
+};
+
+const receiveTestMsg = (data) => {
+  console.log("recieved custom message!, data.color=" + data.color);
 };
 
 const receiveDefaultMsg = (header, data) => {
