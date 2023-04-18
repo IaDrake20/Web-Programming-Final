@@ -118,6 +118,8 @@ let ws;
 
 let turn = false;
 
+let inCombat = false;
+
 let chaos_level_current = 1;
 
 // initialize other UI things
@@ -162,7 +164,7 @@ const checkTurn = () => {
 };
 
 const Save = () => {
-    console.log("save");
+  console.log("save");
 }
 
 const handleInput = (event) => {
@@ -307,10 +309,10 @@ const handleInput = (event) => {
       .then((response) => response.json())
       .then((event) => {
         const p = document.createElement("p");
-        p.innerText = data.description;
+        p.innerText = event.description;
         middleDiv.appendChild(p);
 
-        switch (data.id) {
+        switch (event.id) {
         case 1: // Treasure
               
             break;
@@ -333,29 +335,36 @@ const handleInput = (event) => {
 
             break;
         }
-          
       });
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
-    if (Math.random < 0.5) {
+    if (Math.random() < 0.5) {
+      fetch("http://localhost:3001/Consumables")
+      .then((response) => response.json())
+      .then((data) => {
 
+      });
     }
     else {
-        const inv = document.createElement("p");
-        inv.innerText = "You Didn't Find Anything Useful.";
-        middleDiv.appendChild(inv);
+      fetch("http://localhost:3001/Consumables")
+        .then((response) => response.json())
+        .then((data) => {
+          const inv = document.createElement("p");
+          inv.innerText = "You Didn't Find Anything Useful.";
+          middleDiv.appendChild(inv);
+      }); 
     }
   } else if (value === "hunt") {
-    p.style.display = "none";
-    Combat();
+      p.style.display = "none";
+      Combat();
   } else if (value === "inventory") {
-    p.style.display = "none";
-    invH = document.createElement("p");
-    invC = document.createElement("p");
-    invA = document.createElement("p");
-    invL = document.createElement("p");
-    invW = document.createElement("p");
+      p.style.display = "none";
+      invH = document.createElement("p");
+      invC = document.createElement("p");
+      invA = document.createElement("p");
+      invL = document.createElement("p");
+      invW = document.createElement("p");
     if (player_stats.user.Equipment_Head != 0) {
       invH.innerText = "Helmet: " + player_stats.user.Equipment_Head.name;
     }
@@ -410,6 +419,7 @@ const Combat = () => {
   exploreDiv.style.display = "none";
   saveButton.style.display = "none";
   combatDiv.style.display = "flex";
+  inCombat = true;
   player_stats.ap_current = player_stats.ap_max;
   fetch("http://localhost:3001/Mobs")
     .then((response) => response.json())
@@ -424,8 +434,9 @@ const Combat = () => {
 // Function to exit combat
 const Escape = () => {
   const p = document.createElement("p");
-  p.innerText = "You Have Escaped.";
+  p.innerText = "You are no longer in Combat.";
   middleDiv.appendChild(p);
+  inCombat = false;
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
   saveButton.style.display = "flex";
@@ -462,7 +473,7 @@ const Magic1 = () => {
 const Magic2 = () => {
   if (!checkTurn()) return;
   if (player_stats.mana_current > 15) {
-    console.log("Fuckton of Damage");
+    inflictDamage("Enemy", 30);
     player_stats.mana_current -= 15;
     player_stats.ap_current -= 1;
 
@@ -515,9 +526,15 @@ const Run = () => {
 
 // Investigate Function
 const Investigate = () => {
-  if (!checkTurn()) return;
-  console.log("Opponent Data");
-  player_stats.ap_current -= 1;
+    if (!checkTurn()) return;
+    player_stats.ap_current -= 1;
+
+  const data = document.createElement("p");
+    data.innerText = ("Enemy: " + enemy_stats.name +
+        " Health: [" + enemy_stats.health_current + "/" + enemy_stats.health_max +
+        "] Attack: " + enemy_stats.attack +
+        " Defense: " + enemy_stats.defense);
+  middleDiv.appendChild(data);
 
   updatePlayerStats();
 };
@@ -625,33 +642,46 @@ const Consume6 = () => {
 };
 
 const calcDamage = (target) => {
-  damageMult = Math.random;
-
+  damageMult = Math.random();
+  damage = 0;
   if (target === "Enemy") {
     if (damageMult > .95) { // Crit
-      damage = 2 * ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+      if (player_stats.user.Equipment_Weapon != 0) {
+        damage = 2 * ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+      }
+      else {
+        damage = 2 * ((player_stats.strength) - enemy_stats.defense)
+      }
     }
-    if (damageMult < .05) { // Miss
+    else if (damageMult < .05) { // Miss
       damage = 0;
     }
     else {
-      damage = ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+      if (player_stats.user.Equipment_Weapon != 0) {
+        damage = ((player_stats.strength + player_stats.user.Equipment_Weapon.value) - enemy_stats.defense);
+      }
+      else {
+        damage = ((player_stats.strength) - enemy_stats.defense);
+      }
+    }
+    if (damage < 0) {
+      damage = 1;
     }
     inflictDamage("Enemy", damage);
-    }
+  }
   if (target === "Player") {
-    player_defense = 0;
+    player_defense = 0; 
 
-    if (player_stats.Equipment_Head != 0) {
+    if (player_stats.user.Equipment_Head != 0) {
       player_defense += (player_stats.Equipment_Head.value);
     }
-    if (player_stats.Equipment_Chest != 0) {
+    if (player_stats.user.Equipment_Chest != 0) {
       player_defense += (player_stats.Equipment_Chest.value);
     }
-    if (player_stats.Equipment_Arms != 0) {
+    if (player_stats.user.Equipment_Arms != 0) {
       player_defense += (player_stats.Equipment_Arms.value);
     }
-    if (player_stats.Equipment_Legs != 0) {
+    if (player_stats.user.Equipment_Legs != 0) {
       player_defense += (player_stats.Equipment_Legs.value);
     }
     if (damageMult > .95) { // Crit
@@ -670,38 +700,48 @@ const calcDamage = (target) => {
 const inflictDamage = (target, damage) => {
   if (target === "Enemy") {
     if ((enemy_stats.health_current - damage) > 0) {
-        enemy_stats.health_current -= damage;
-        const p = document.createElement("p");
-        p.innerText = enemy.name, " took ", damage, " damage.";
-        middleDiv.appendChild(p);
+      enemy_stats.health_current -= damage;
+      const dam = document.createElement("p");
+      dam.innerText = enemy_stats.name + " took " + damage + " points of damage.";
+      middleDiv.appendChild(dam);
     }
     else {
       enemy_stats.health_current = 0;
+      const dam = document.createElement("p");
+      dam.innerText = enemy_stats.name + " took " + damage + " points of lethal damage.";
+      middleDiv.appendChild(dam);
       endCombat();
     }
   }
   if (target === "Player") {
     if ((player_stats.hp_current - damage) > 0) {
-        player_stats.hp_current -= damage;
-        const p = document.createElement("p");
-        p.innerText = You, " took ", damage, " damage.";
-        middleDiv.appendChild(p);
+      player_stats.hp_current -= damage;
+      const dam = document.createElement("p");
+      dam.innerText = "You took " + damage + " points of damage.";
+      middleDiv.appendChild(dam);
     }
     else {
       player_stats.hp_current = 0;
+      const dam = document.createElement("p");
+      dam.innerText = "You took " + damage + " points of lethal damage.";
+      middleDiv.appendChild(dam);
       playerDeath();
     }
   }
 }
 
 const endCombat = () => {
-
-
+    
+    Escape();
 }
 
 const playerDeath = () => {
-
-
+    console.log("you died");
+    player_stats.hp_current = 1;
+    player_stats.mana_current = 1;
+    player_stats.score -= 100;
+    updatePlayerStats();
+    Escape();
 }
 
 const endTurn = () => {
@@ -712,6 +752,12 @@ const endTurn = () => {
   }
   else {
     player_stats.mana_current = player_stats.mana_max;
+   }
+  if (inCombat) {
+    calcDamage("Player");
+    calcDamage("Player");
+    calcDamage("Player");
+    calcDamage("Player");
   }
   updatePlayerStats();
 
