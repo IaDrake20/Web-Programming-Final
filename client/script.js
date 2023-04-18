@@ -802,53 +802,53 @@ async function connectToServer() {
   });
 
   ws.onmessage = (webSocketMessage) => {
-    console.log("recieved message!");
+    console.log("received message!");
     const messageBody = JSON.parse(webSocketMessage.data);
-    recieveMessage(messageBody);
+    receiveMessage(messageBody);
   };
 
   // let server know the ws is ready
   sendMsgToServer("ready");
 }
 
-// function to handle messages recieved from ws
+// function to handle messages received from ws
 // header for msg title, body for any other data
-const recieveMessage = (msg) => {
+const receiveMessage = (msg) => {
   const header = msg.header;
   const body = msg.body;
 
   switch (header) {
-    // initial message recieved from server, initializes turn
+    // initial message received from server, initializes turn
     case "init":
-      recieveInitMsg(body);
+      receiveInitMsg(body);
       break;
 
-    // msg recieved when a player ends their turn
+    // msg received when a player ends their turn
     case "turn":
-      recieveTurnMsg(body);
+      receiveTurnMsg(body);
       break;
 
     case "chat":
-      recieveChatMsg(body);
+      receiveChatMsg(body);
       break;
 
     default:
-      recieveDefaultMsg(header, body);
+      receiveDefaultMsg(header, body);
       break;
   }
 };
 
-const recieveDefaultMsg = (header, data) => {
-  console.log(`Message recieved! header=${header}, body=${data}`);
+const receiveDefaultMsg = (header, data) => {
+  console.log(`Message received! header=${header}, body=${data}`);
 };
 
-const recieveInitMsg = (data) => {
-  console.log("recieved init message");
+const receiveInitMsg = (data) => {
+  console.log("received init message");
   // let client know its own id
   wsData.id = data.id;
 
   // this message also contains information about whose turn it is
-  // set turn value (see recieveTurnMsg for details)
+  // set turn value (see receiveTurnMsg for details)
   turn = wsData.id === data.turn;
 
   // display turn status
@@ -861,7 +861,7 @@ const recieveInitMsg = (data) => {
   middleDiv.appendChild(p);
 };
 
-const recieveTurnMsg = (data) => {
+const receiveTurnMsg = (data) => {
   const turnId = data.turn;
   const sender = data.sender;
 
@@ -881,7 +881,7 @@ const recieveTurnMsg = (data) => {
   }
 };
 
-const recieveChatMsg = (data) => {
+const receiveChatMsg = (data) => {
   const p = document.createElement("p");
   p.innerText = `${data.sender}: ${data.msg}`;
   middleDiv.appendChild(p);

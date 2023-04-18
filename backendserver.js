@@ -45,7 +45,7 @@ wss.on("connection", (ws) => {
   ws.on("message", (messageAsString) => {
     const msg = JSON.parse(messageAsString);
 
-    console.log("Server recieved msg:", msg);
+    console.log("Server received msg:", msg);
 
     const target = msg.target;
     const header = msg.header;
