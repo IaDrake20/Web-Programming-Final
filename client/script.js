@@ -394,7 +394,7 @@ const handleInput = (event) => {
 
   middleDiv.appendChild(p);
 
-  sendMsgToOthers({ msg: value });
+  sendMsgToAll("chat", { msg: actionInput.value });
   actionInput.value = "";
 };
 
@@ -753,16 +753,46 @@ const endTurn = () => {
   // if solo, do not do the multiplayer stuff
   if (!sessionId) return;
   turn = false;
-  ws.send(JSON.stringify({ msg: "end turn" }));
+  sendMsgToAll("end turn");
 };
 
-async function sendMsgToOthers(msg) {
+/**
+ *
+ *  ws / multiplayer stuff below
+ *
+ */
+
+// data the client needs to know about multiplayer
+// currently, just needs to know its own id (assigned on init message)
+const wsData = {
+  id: null,
+};
+
+// call anywhere to send a message to all other clients
+// header is msg title (eg. "end turn")
+// msg is any other data you want to send
+const sendMsgToAll = async (header, body) => {
   if (!sessionId) return;
-  await ws.send(JSON.stringify({ msg: msg }));
-}
+  await ws.send(JSON.stringify({ target: "all", header, body }));
+};
+
+// call anywhere to send a message to the server only, will not go to other clients
+const sendMsgToServer = async (header, body) => {
+  if (!sessionId) return;
+  await ws.send(JSON.stringify({ target: "server", header, body }));
+};
+
+// call anywhere to send a message to one other target
+// not implemented yet
+const sendMsgToOne = async (header, body, target) => {
+  if (!sessionId) return;
+  await ws.send(JSON.stringify({ target, header, body }));
+};
+
+// connect ws, register onMessage, send 'ready' message to server
 async function connectToServer() {
   const wsLoading = new WebSocket("ws://localhost:7071/ws");
-  const promise = new Promise((resolve, reject) => {
+  ws = await new Promise((resolve, reject) => {
     const timer = setInterval(() => {
       if (wsLoading.readyState === 1) {
         clearInterval(timer);
@@ -771,37 +801,83 @@ async function connectToServer() {
     }, 10);
   });
 
-  ws = await promise;
-
   ws.onmessage = (webSocketMessage) => {
     console.log("recieved message!");
     const messageBody = JSON.parse(webSocketMessage.data);
-
-    const msgTurn = messageBody.turn;
-
-    const sender = messageBody.sender;
-    const msg = messageBody.msg;
-
-    // if turn information was sent
-    if (typeof msgTurn !== "undefined") {
-      const p = document.createElement("p");
-      if (msgTurn) {
-        p.innerText = `It is your turn. go ahead and play!`;
-        turn = true;
-      } else {
-        p.innerText = "It is not your turn.  Please wait.";
-        turn = false;
-      }
-      middleDiv.appendChild(p);
-    }
-
-    const p = document.createElement("p");
-    p.innerText = `sender: ${sender}, msg: ${msg}`;
-    middleDiv.appendChild(p);
+    recieveMessage(messageBody);
   };
 
-  ws.send(JSON.stringify({ msg: "ready" }));
+  // let server know the ws is ready
+  sendMsgToServer("ready");
 }
+
+// function to handle messages recieved from ws
+// header for msg title, body for any other data
+const recieveMessage = (msg) => {
+  const header = msg.header;
+  const body = msg.body;
+
+  switch (header) {
+    // initial message recieved from server, initializes turn
+    case "init":
+      recieveInitMsg(body);
+      break;
+
+    // msg recieved when a player ends their turn
+    case "turn":
+      recieveTurnMsg(body);
+      break;
+
+    case "chat":
+      recieveChatMsg(body);
+      break;
+  }
+};
+
+const recieveInitMsg = (data) => {
+  console.log("recieved init message");
+  // let client know its own id
+  wsData.id = data.id;
+
+  // this message also contains information about whose turn it is
+  // set turn value (see recieveTurnMsg for details)
+  turn = wsData.id === data.turn;
+
+  // display turn status
+  const p = document.createElement("p");
+  if (turn) {
+    p.innerText = `It is your turn. go ahead and play!`;
+  } else {
+    p.innerText = "It is not your turn.  Please wait.";
+  }
+  middleDiv.appendChild(p);
+};
+
+const recieveTurnMsg = (data) => {
+  const turnId = data.turn;
+  const sender = data.sender;
+
+  // turnId is Id of client who's turn it currently is
+  // check if your id === turnId to decide if it is your turn
+  // turn is local state, true or false
+  turn = wsData.id === turnId;
+
+  const p = document.createElement("p");
+  p.innerText = `${sender} ended their turn.`;
+  middleDiv.appendChild(p);
+
+  if (turn) {
+    const p2 = document.createElement("p");
+    p2.innerText = `It is your turn!`;
+    middleDiv.appendChild(p2);
+  }
+};
+
+const recieveChatMsg = (data) => {
+  const p = document.createElement("p");
+  p.innerText = `${data.sender}: ${data.msg}`;
+  middleDiv.appendChild(p);
+};
 
 // only do web sockets if user opted to play online
 if (sessionId) {

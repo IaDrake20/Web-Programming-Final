@@ -14,10 +14,17 @@ const uri = `mongodb+srv://${user}:${pswrd}@cluster0.zpcyqgd.mongodb.net/test`;
 //setup connection to mongodb
 const { MongoClient } = require("mongodb");
 
-// web socket stuff
+/**
+ *
+ * Start ws region
+ *
+ */
+
 // tutorial: https://ably.com/blog/web-app-websockets-nodejs
+
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: 7071 });
+
 // map of clients
 const clients = new Map();
 let numClients = 0;
@@ -29,62 +36,89 @@ let clientTurn = 0;
 wss.on("connection", (ws) => {
   console.log("client connected!");
   const id = numClients++;
-  let turn = clientTurn == id;
-  const metadata = { id, turn };
+  const metadata = { id };
 
   // associate a client with some data (an id and color)
   clients.set(ws, metadata);
 
-  // send an initial message to the client, with their turn status
-  // const clientsArray = Array.from(clients.values());
-  // const client = clientsArray[id];
-  // client.send({ id: id, msg: "Connected to server!", turn: turn });
-
   // register callback for when client sends a message to server
   ws.on("message", (messageAsString) => {
-    const message = JSON.parse(messageAsString);
+    const msg = JSON.parse(messageAsString);
 
-    // client ready message
-    if (message.msg === "ready") {
-      const clientKeysArray = [...clients.keys()];
-      const client = clientKeysArray[id];
-      client.send(
-        JSON.stringify({ id: id, sender: "server", msg: "Connected to server!", turn: turn })
-      );
-      return;
+    console.log("Server recieved msg:", msg);
+
+    const target = msg.target;
+    const header = msg.header;
+    const body = msg.body;
+
+    const metadata = clients.get(ws);
+
+    switch (target) {
+      // msg does not get sent out to other clients
+      // but, server may send a response to the sender
+      case "server":
+        handleServerMessage(header, body, metadata);
+        break;
+
+      // send msg to all other clients
+      case "all":
+        handleAllMessage(header, body, metadata);
+        break;
+
+      // target should always exist, so this represents msg to one
+      // target value will be id of recipient
+      // not implemented yet
+      default:
+        break;
     }
-    // end turn message
-    else if (message.msg === "end turn") {
-      const metadata = clients.get(ws);
-      clientTurn = (clientTurn + 1) % numClients;
-      console.log(clientTurn);
 
-      message.sender = metadata.id;
-      message.msg = "Ended their turn";
+    /**
+     *
+     * TODO: remove all below this
+     *
+     */
 
-      [...clients.keys()].forEach((client) => {
-        const recieverMetadata = clients.get(client);
-        let myTurn = clientTurn == recieverMetadata.id;
-        console.log(myTurn, clientTurn, recieverMetadata.id);
-        message.turn = myTurn;
-        const outbound = JSON.stringify(message);
-        client.send(outbound);
-      });
-      return;
-    }
-    // basic message
-    else {
-      const metadata = clients.get(ws);
+    // // client ready message
+    // if (message.msg === "ready") {
+    //   const clientKeysArray = [...clients.keys()];
+    //   const client = clientKeysArray[id];
+    //   client.send(
+    //     JSON.stringify({ id: id, sender: "server", msg: "Connected to server!", turn: turn })
+    //   );
+    //   return;
+    // }
+    // // end turn message
+    // else if (message.msg === "end turn") {
+    //   const metadata = clients.get(ws);
+    //   clientTurn = (clientTurn + 1) % numClients;
+    //   console.log(clientTurn);
 
-      // attach additional data to the message to be sent to everyone
-      message.sender = metadata.id;
+    //   message.sender = metadata.id;
+    //   message.msg = "Ended their turn";
 
-      const outbound = JSON.stringify(message);
+    //   [...clients.keys()].forEach((client) => {
+    //     const recieverMetadata = clients.get(client);
+    //     let myTurn = clientTurn == recieverMetadata.id;
+    //     console.log(myTurn, clientTurn, recieverMetadata.id);
+    //     message.turn = myTurn;
+    //     const outbound = JSON.stringify(message);
+    //     client.send(outbound);
+    //   });
+    //   return;
+    // }
+    // // basic message
+    // else {
+    //   const metadata = clients.get(ws);
 
-      [...clients.keys()].forEach((client) => {
-        client.send(outbound);
-      });
-    }
+    //   // attach additional data to the message to be sent to everyone
+    //   message.sender = metadata.id;
+
+    //   const outbound = JSON.stringify(message);
+
+    //   [...clients.keys()].forEach((client) => {
+    //     client.send(outbound);
+    //   });
+    // }
   });
 
   // register callback for when client quits
@@ -94,6 +128,49 @@ wss.on("connection", (ws) => {
     clients.delete(ws);
   });
 });
+
+const handleServerMessage = (header, body, senderMeta) => {
+  switch (header) {
+    case "ready":
+      sendToClient("init", { id: senderMeta.id, turn: clientTurn }, senderMeta.id);
+      break;
+  }
+};
+
+const handleAllMessage = (header, body, senderMeta) => {
+  const sender = senderMeta.id;
+  switch (header) {
+    case "chat":
+      const msg = body.msg;
+      sendToAllClients("chat", { sender, msg });
+      break;
+    case "end turn":
+      clientTurn = (clientTurn + 1) % numClients;
+      sendToAllClients("turn", { sender, turn: clientTurn });
+  }
+};
+
+// send msg to client whos id is specified
+const sendToClient = (header, body, id) => {
+  const clientKeysArray = [...clients.keys()];
+  const client = clientKeysArray[id];
+  client.send(JSON.stringify({ header, body }));
+  console.log("Server sending msg to one [id=" + id + "]:", { header, body });
+};
+
+// send msg to all clients
+const sendToAllClients = (header, body) => {
+  [...clients.keys()].forEach((client) => {
+    client.send(JSON.stringify({ header, body }));
+  });
+  console.log("Server sending msg to all:", { header, body });
+};
+
+/**
+ *
+ * End ws region
+ *
+ */
 
 let mongo;
 
