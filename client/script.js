@@ -165,18 +165,14 @@ const checkTurn = () => {
 
 const Save = async () => {
   console.log("save");
-  try {
     const response = await fetch("http://localhost:3001/updateUser", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ name: username, pass: userpassword }),
+      body: JSON.stringify(player_stats),
     });
-  } catch (error) {
-    console.error("Error:", error);
-  }
 };
 
 
