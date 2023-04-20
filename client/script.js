@@ -175,6 +175,7 @@ const Save = async () => {
   //console.log("save "+JSON.parse(player_stats));
   //const data = JSON.parse(player_stats);
   const myUsername = player_stats.user.Username;
+  const data = { username: myUsername};
 
     const response = await fetch("http://localhost:3001/updateUser", {
       headers: {
@@ -182,7 +183,7 @@ const Save = async () => {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(myUsername),
+      body: JSON.stringify(data),
     });
   const content = await response.json();
   console.log(content);
