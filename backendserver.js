@@ -359,58 +359,48 @@ async function loginUser(name, password) {
 async function addUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
   await collection.insertOne({
-    Username: name,
-    Password: password,
-    Small_H: 0,
-    Medium_H: 0,
-    Large_H: 0,
-    Small_M: 0,
-    Medium_M: 0,
-    Large_M: 0,
-    Equipment_Legs: 0,
-    Equipment_Chest: 0,
-    Equipment_Arms: 0,
-    Equipment_Head: 0,
-    Equipment_Weapon: 0,
-    World_Current_Stage: 0,
-    World_Chaos_Level: 0,
+    hp_max: 100,
+    hp_current: 100,
+    mana_current: 50,
+    mana_max: 50,
+    ap_current: 4,
+    ap_max: 4,
+    xp_current: 0,
+    xp_threshold: 25,
+    strength: 10,
+    character_level_current: 1,
+    score: 69,
+    user: {
+      Username: name,
+      Password: password,
+      Small_H: 0,
+      Medium_H: 0,
+      Large_H: 0,
+      Small_M: 0,
+      Medium_M: 0,
+      Large_M: 0,
+      Equipment_Legs: 0,
+      Equipment_Chest: 0,
+      Equipment_Arms: 0,
+      Equipment_Head: 0,
+      Equipment_Weapon: 0,
+      World_Current_Stage: 0,
+      World_Chaos_Level: 0,
+    },
   });
   console.log("user added to db");
 }
-/* Template for user inventory
-Small_H: {number, P_h1Value},
-    Medium_H: {number, P_h2Value},
-    Large_H: {number, P_h3Value},
-    Small_M: {number, P_m1Value},
-    Medium_M: {number, P_m2Value},
-    Large_M: {number, P_m3Value},
-    Equipment_Legs: {E_fName, E_fValue},
-    Equipment_Chest: {E_cName, E_cValue},
-    Equipment_Arms: {E_aName, E_aValue},
-    Equipment_Head: {E_hName, E_hValue}
-*/
+
 
 //update user info
-
-async function updateUser(name) {
+app.post("/updateUser", async (req, res) => {
+  console.log("Trying to overwrite user with current data...");
   const collection = mongo.db("User_Info").collection("user");
-  await collection.findOne({ Username: name });
-  await collection.insertOne({
-    Username: name,
-    Password: password,
-    Small_H: 0,
-    Medium_H: 0,
-    Large_H: 0,
-    Small_M: 0,
-    Medium_M: 0,
-    Large_M: 0,
-    Equipment_Feet: 0,
-    Equipment_Chest: 0,
-    Equipment_Arms: 0,
-    Equipment_Head: 0,
-    Equipment_Weapon: 0,
-  });
-}
+  let username;
+  await collection.findOne({ Username: username });
+  console.log(req.player_stats);
+  await collection.insertOne(req.player_stats);
+});
 
 // temp
 app.get("/", (req, res) => {

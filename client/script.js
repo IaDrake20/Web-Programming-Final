@@ -163,9 +163,22 @@ const checkTurn = () => {
   return true;
 };
 
-const Save = () => {
+const Save = async () => {
   console.log("save");
+  try {
+    const response = await fetch("http://localhost:3001/updateUser", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ name: username, pass: userpassword }),
+    });
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
+
 
 const handleInput = (event) => {
   event.preventDefault();
