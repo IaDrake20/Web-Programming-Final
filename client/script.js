@@ -33,6 +33,7 @@ const consumeButton4 = document.querySelectorAll("#mana-s");
 const consumeButton5 = document.querySelectorAll("#mana-m");
 const consumeButton6 = document.querySelectorAll("#mana-l");
 const saveButton = document.querySelector("#save-button");
+const legendBox = document.querySelector("#legend");
 
 // attach event listeners
 saveButton.addEventListener("click", () => Save());
@@ -415,6 +416,7 @@ const handleInput = (event) => {
 const Combat = () => {
   exploreDiv.style.display = "none";
   saveButton.style.display = "none";
+  legendBox.style.display = "none";
   combatDiv.style.display = "flex";
   inCombat = true;
   player_stats.ap_current = player_stats.ap_max;
@@ -437,6 +439,8 @@ const Escape = () => {
   combatDiv.style.display = "none";
   exploreDiv.style.display = "flex";
   saveButton.style.display = "flex";
+  legendBox.style.display = "block";
+
 };
 
 // Attack Function
@@ -740,8 +744,11 @@ const endCombat = () => {
 
 const playerDeath = () => {
   console.log("you died");
-  player_stats.hp_current = 1;
-  player_stats.mana_current = 1;
+  const die = document.createElement("p");
+  die.innerText = "You are Dead";
+  middleDiv.appendChild(die);
+  player_stats.hp_current = 0;
+  player_stats.mana_current = 0;
   player_stats.score -= 100;
   updatePlayerStats();
   Escape();
