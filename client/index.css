@@ -136,6 +136,14 @@ body {
   justify-content: end;
 }
 
+#legend {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  text-align: center;
+}
+
 /* gradient at top of text box to show that it scrolls */
 /* sensitive to changes in #top's height */
 /* probably want to disable this when scrolled all the way to the top */
