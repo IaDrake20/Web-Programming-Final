@@ -85,6 +85,7 @@ function getCookie(name) {
 
 // initialize player_stats object
 let player_stats = {
+  character_level_current: 1,
   hp_max: 100,
   hp_current: 100,
   mana_current: 50,
@@ -94,7 +95,6 @@ let player_stats = {
   xp_current: 0,
   xp_threshold: 25,
   strength: 10,
-  character_level_current: 1,
   score: 69,
   user: {
     Username: u_name,
@@ -162,11 +162,23 @@ const updatePlayerStats = () => {
   actionPointsBar.style.width = `${150 * apPercentage}px`;
   experienceBar.style.width = `${150 * xpPercentage}px`;
 
+  if (player_stats.xp_current >= player_stats.xp_threshold) {
+    levelUp();
+  }
+
   if (player_stats.ap_current == 0) {
     endTurn();
   }
 };
 updatePlayerStats();
+
+const levelUp = () => {
+    player_stats.character_level_current++;
+    player_stats.xp_current -= player_stats.xp_threshold;
+    player_stats.hp_max += 10;
+    player_stats.mana_max += 5;
+    updatePlayerStats();
+}
 
 const checkTurn = () => {
   console.log(turn);
@@ -339,29 +351,218 @@ const handleInput = (event) => {
 
     if (Math.random() < 0.5) {
       fetch("http://localhost:3001/Events")
-        .then((response) => response.json())
-        .then((event) => {
+      .then((response) => response.json())
+      .then((event) => {
+
+        if(Math.random() < event.chance){
           const p = document.createElement("p");
           p.innerText = event.description;
           middleDiv.appendChild(p);
 
           switch (event.id) {
             case 1: // Treasure
+            switch (Math.floor(Math.random() * 3) % 3) {
+              case 0:
+                fetch("http://localhost:3001/Weapons")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    const itemP = document.createElement("p");
+                    itemP.innerText = data.name;
+                    itemP.style.color = "violet";
+                    middleDiv.appendChild(itemP);
+                    if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
+                      player_stats.user.Equipment_Weapon = data;
+                    }
+                    value = null;
+                  });
+                  updatePlayerStats(); 
+                  break;
+              case 1:
+                fetch("http://localhost:3001/Equipment")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    const itemP = document.createElement("p");
+                    itemP.innerText = data.name;
+                    itemP.style.color = "violet";
+                    middleDiv.appendChild(itemP);
+                    switch (data.position) {
+                      case "legs":
+                        if ((data.id > player_stats.user.Equipment_Legs.id) || (player_stats.user.Equipment_Legs === 0)) {
+                            player_stats.user.Equipment_Legs = data;
+                        }
+                        break;
+                      case "arms":
+                        if ((data.id > player_stats.user.Equipment_Arms.id) || (player_stats.user.Equipment_Arms === 0)) {
+                            player_stats.user.Equipment_Arms = data;
+                        }
+                        break;
+                      case "chest":
+                        if ((data.id > player_stats.user.Equipment_Chest.id) || (player_stats.user.Equipment_Chest === 0)) {
+                            player_stats.user.Equipment_Chest = data;
+                        }
+                        break;
+                      case "head":
+                        if ((data.id > player_stats.user.Equipment_Head.id) || (player_stats.user.Equipment_Head === 0)){
+                          player_stats.user.Equipment_Head = data;
+                        }
+                        break;
+                    }
+                    value = null;
+                  });
+                updatePlayerStats(); 
+                break;
+              case 2:
+                fetch("http://localhost:3001/Weapons")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    const itemP = document.createElement("p");
+                    itemP.innerText = data.name;
+                    itemP.style.color = "violet";
+                    middleDiv.appendChild(itemP);
+                    if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
+                      player_stats.user.Equipment_Weapon = data;
+                    }
+                  });
+                fetch("http://localhost:3001/Equipment")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    const itemP = document.createElement("p");
+                    itemP.innerText = data.name;
+                    itemP.style.color = "violet";
+                    middleDiv.appendChild(itemP);
+                    switch (data.position) {
+                      case "legs":
+                        if ((data.id > player_stats.user.Equipment_Legs.id) || (player_stats.user.Equipment_Legs === 0)) {
+                            player_stats.user.Equipment_Legs = data;
+                        }
+                        break;
+                      case "arms":
+                        if ((data.id > player_stats.user.Equipment_Arms.id) || (player_stats.user.Equipment_Arms === 0)) {
+                            player_stats.user.Equipment_Arms = data;
+                        }
+                        break;
+                      case "chest":
+                        if ((data.id > player_stats.user.Equipment_Chest.id) || (player_stats.user.Equipment_Chest === 0)) {
+                            player_stats.user.Equipment_Chest = data;
+                        }
+                        break;
+                      case "head":
+                        if ((data.id > player_stats.user.Equipment_Head.id) || (player_stats.user.Equipment_Head === 0)){
+                          player_stats.user.Equipment_Head = data;
+                        }
+                        break;
+                    }
+                  });
+                  updatePlayerStats(); 
+                break;
+              }
               break;
             case 2: // Demon King Altar
+              switch (Math.floor(Math.random() * 2) % 2) {
+                case 0:
+                  fetch("http://localhost:3001/Weapons")
+                    .then((response) => response.json())
+                    .then((data) => {
+                      const itemP = document.createElement("p");
+                      itemP.innerText = data.name;
+                      itemP.style.color = "violet";
+                      middleDiv.appendChild(itemP);
+                      if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
+                        player_stats.user.Equipment_Weapon = data;
+                      }
+                      updatePlayerStats();
+                    });
+                    break;
+                case 1:
+                  fetch("http://localhost:3001/Consumables")
+                    .then((response) => response.json())
+                    .then((data) => {
+                      const itemP = document.createElement("p");
+                      itemP.innerText = data.name;
+                      itemP.style.color = "violet";
+                      middleDiv.appendChild(itemP);
+                      switch (data.id) {
+                        case 1:
+                          currConsumable = document.querySelectorAll("#health-s");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Small_H++;
+                          break;
+                        case 2:
+                          currConsumable = document.querySelectorAll("#health-m");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Medium_H++;
+                          break;
+                        case 3:
+                          currConsumable = document.querySelectorAll("#health-l");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Large_H++;
+                          break;
+                        case 4:
+                          currConsumable = document.querySelectorAll("#mana-s");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Small_M++;
+                          break;
+                        case 5:
+                          currConsumable = document.querySelectorAll("#mana-m");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Medium_M++;
+                          break;
+                        case 6:
+                          currConsumable = document.querySelectorAll("#mana-l");
+                          currConsumable.forEach((consumable) => {
+                            consumable.style.display = "flex";
+                          });
+                          player_stats.Large_M++;
+                          break;
+                      }
+                    });
+                }
               break;
             case 3: // Trap
+              if (Math.random() > 0.5) {
+                const p = document.createElement("p");
+                p.innerText = "You Evaded the Trap";
+                middleDiv.appendChild(p);
+              }
+              else {
+                const p = document.createElement("p");
+                p.innerText = "You Sprung The Trap!";
+                middleDiv.appendChild(p);
+                player_stats.hp_current -= player_stats.character_level_current * 10;
+              }
               break;
-            case 4: // Thief
+            case 4: // Combat
+              const fight = document.createElement("p");
+              fight.innerText = "An Enemy Approaches";
+              middleDiv.appendChild(fight);
+              Combat();
               break;
-            case 5: // Caravan
+            case 5: // Ohl
+              const ohl = document.createElement("p");
+              ohl.innerText = "You Deserve an A+!";
+              middleDiv.appendChild(ohl);
+              player_stats.hp_current = player_stats.hp_max;
+              player_stats.mana_current = player_stats.mana_max;
               break;
-            case 6: // Ohl
+            case 6: // Caravan (Unimplemented)
               break;
-            case 7: // Mine
+            case 7: // Mine (Unimplemented)
               break;
+            case 8: // Thief (Unimplemented)
+              break;
+            }
           }
-        });
+      });
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
@@ -463,7 +664,6 @@ const Escape = () => {
   exploreDiv.style.display = "flex";
   saveButton.style.display = "flex";
   legendBox.style.display = "block";
-
 };
 
 // Attack Function

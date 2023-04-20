@@ -265,7 +265,7 @@ app.get("/Mobs", async (req, res) => {
 app.get("/Events", async (req, res) => {
   console.log("Event requested...");
   const collection = mongo.db("db_events").collection("events");
-  const item = await getRandomDBItem(1, 7, collection);
+  const item = await getRandomDBItem(1, 5, collection);
   res.json(item);
   console.log(item.description);
 });
