@@ -396,7 +396,7 @@ async function addUser(name, password) {
 app.post("/updateUser", async (req, res) => {
   console.log("Trying to overwrite user with current data...");
   const collection = mongo.db("User_Info").collection("user");
-  let username = req.body.client_username;
+  let username = req.body;
   console.log("Finding "+username+" in db to save data");
   await collection.findOne({ Username: username });
   console.log(req.player_stats);

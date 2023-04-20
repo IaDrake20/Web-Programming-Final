@@ -75,6 +75,14 @@ console.log("client username is "+u_name);
 
 console.log("printing list of cookies "+document.cookie);
 
+//grabbed from here: http://stackoverflow.com/questions/10730362/ddg#15724300
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+
 // initialize player_stats object
 let player_stats = {
   hp_max: 100,
@@ -171,11 +179,12 @@ const checkTurn = () => {
   return true;
 };
 
+
 const Save = async () => {
   //console.log("save "+JSON.parse(player_stats));
   //const data = JSON.parse(player_stats);
   const myUsername = player_stats.user.Username;
-  const data = { username: myUsername};
+  console.log("Saving "+myUsername);
 
     const response = await fetch("http://localhost:3001/updateUser", {
       headers: {
@@ -183,8 +192,9 @@ const Save = async () => {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(myUsername),
     });
+
   const content = await response.json();
   console.log(content);
 };

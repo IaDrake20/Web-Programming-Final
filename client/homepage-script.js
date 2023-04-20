@@ -108,6 +108,7 @@ const login = async () => {
 
   //make username cookie for client to know who it is
   document.cookie =username;
+  console.log("Created cookie: "+document.cookie);
 
   // validate password
   if (!userpassword) {
