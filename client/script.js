@@ -69,6 +69,12 @@ actionInput.addEventListener("keypress", (e) => {
 
 const sessionId = window.location.pathname.split("/").pop();
 
+//grab username cookie
+let u_name = document.cookie;
+console.log("client username is "+u_name);
+
+console.log("printing list of cookies "+document.cookie);
+
 // initialize player_stats object
 let player_stats = {
   hp_max: 100,
@@ -83,6 +89,7 @@ let player_stats = {
   character_level_current: 1,
   score: 69,
   user: {
+    Username: u_name,
     Small_H: 0,
     Medium_H: 0,
     Large_H: 0,
@@ -95,8 +102,8 @@ let player_stats = {
     Equipment_Head: 0,
     Equipment_Weapon: 0,
     World_Current_Stage: 0,
-    World_Chaos_Level: 0,
-  },
+    World_Chaos_Level: 0
+  }
 };
 
 let enemy_stats = {
@@ -165,15 +172,20 @@ const checkTurn = () => {
 };
 
 const Save = async () => {
-  console.log("save");
+  //console.log("save "+JSON.parse(player_stats));
+  //const data = JSON.parse(player_stats);
+  const myUsername = player_stats.user.Username;
+
     const response = await fetch("http://localhost:3001/updateUser", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(player_stats),
+      body: JSON.stringify(myUsername),
     });
+  const content = await response.json();
+  console.log(content);
 };
 
 

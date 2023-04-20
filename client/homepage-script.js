@@ -106,6 +106,9 @@ const login = async () => {
     return;
   }
 
+  //make username cookie for client to know who it is
+  document.cookie =username;
+
   // validate password
   if (!userpassword) {
     infoMessagesElement.style.color = RED;
