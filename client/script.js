@@ -490,6 +490,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Small_H++;
+                          updatePlayerStats();
                           break;
                         case 2:
                           currConsumable = document.querySelectorAll("#health-m");
@@ -497,6 +498,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Medium_H++;
+                          updatePlayerStats();
                           break;
                         case 3:
                           currConsumable = document.querySelectorAll("#health-l");
@@ -504,6 +506,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Large_H++;
+                          updatePlayerStats();
                           break;
                         case 4:
                           currConsumable = document.querySelectorAll("#mana-s");
@@ -511,6 +514,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Small_M++;
+                          updatePlayerStats();
                           break;
                         case 5:
                           currConsumable = document.querySelectorAll("#mana-m");
@@ -518,6 +522,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Medium_M++;
+                          updatePlayerStats();
                           break;
                         case 6:
                           currConsumable = document.querySelectorAll("#mana-l");
@@ -525,6 +530,7 @@ const handleInput = (event) => {
                             consumable.style.display = "flex";
                           });
                           player_stats.Large_M++;
+                          updatePlayerStats();
                           break;
                       }
                     });
@@ -568,18 +574,63 @@ const handleInput = (event) => {
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
-    if (Math.random() < 0.5) {
-      fetch("http://localhost:3001/Consumables")
-        .then((response) => response.json())
-        .then((data) => {});
-    } else {
+    if ((Math.random() * 10) < 5) {
       fetch("http://localhost:3001/Consumables")
         .then((response) => response.json())
         .then((data) => {
-          const inv = document.createElement("p");
-          inv.innerText = "You Didn't Find Anything Useful.";
-          middleDiv.appendChild(inv);
+          const itemP = document.createElement("p");
+          itemP.innerText = data.name;
+          itemP.style.color = "violet";
+          middleDiv.appendChild(itemP);
+          switch (data.id) {
+            case 1:
+              currConsumable = document.querySelectorAll("#health-s");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Small_H++;
+              break;
+            case 2:
+              currConsumable = document.querySelectorAll("#health-m");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Medium_H++;
+              break;
+            case 3:
+              currConsumable = document.querySelectorAll("#health-l");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Large_H++;
+              break;
+            case 4:
+              currConsumable = document.querySelectorAll("#mana-s");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Small_M++;
+              break;
+            case 5:
+              currConsumable = document.querySelectorAll("#mana-m");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Medium_M++;
+              break;
+            case 6:
+              currConsumable = document.querySelectorAll("#mana-l");
+              currConsumable.forEach((consumable) => {
+              consumable.style.display = "flex";
+              });
+              player_stats.Large_M++;
+              break;
+            }
         });
+    } else {
+        const inv = document.createElement("p");
+        inv.innerText = "You Didn't Find Anything Useful.";
+        middleDiv.appendChild(inv);
     }
   } else if (value === "hunt") {
     p.style.display = "none";
@@ -780,7 +831,8 @@ const Consume1 = () => {
     player_stats.hp_current += 20;
   }
   player_stats.Small_H--;
-  if (player_stats.Small_H === 0) {
+  updatePlayerStats();
+  if (player_stats.Small_H == 0) {
     currConsumable = document.querySelectorAll("#health-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -797,7 +849,8 @@ const Consume2 = () => {
     player_stats.hp_current += 50;
   }
   player_stats.Medium_H--;
-  if (player_stats.Medium_H === 0) {
+  updatePlayerStats();
+  if (player_stats.Medium_H == 0) {
     currConsumable = document.querySelectorAll("#health-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -814,7 +867,8 @@ const Consume3 = () => {
     player_stats.hp_current += 100;
   }
   player_stats.Large_H--;
-  if (player_stats.Large_H === 0) {
+  updatePlayerStats();
+  if (player_stats.Large_H == 0) {
     currConsumable = document.querySelectorAll("#health-l");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -831,7 +885,8 @@ const Consume4 = () => {
     player_stats.mana_current += 10;
   }
   player_stats.Small_M--;
-  if (player_stats.Small_M === 0) {
+  updatePlayerStats();
+  if (player_stats.Small_M == 0) {
     currConsumable = document.querySelectorAll("#mana-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -848,7 +903,8 @@ const Consume5 = () => {
     player_stats.mana_current += 25;
   }
   player_stats.Medium_M--;
-  if (player_stats.Medium_M === 0) {
+  updatePlayerStats();
+  if (player_stats.Medium_M == 0) {
     currConsumable = document.querySelectorAll("#mana-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -865,7 +921,8 @@ const Consume6 = () => {
     player_stats.mana_current += 50;
   }
   player_stats.Large_M--;
-  if (player_stats.Large_M === 0) {
+  updatePlayerStats();
+  if (player_stats.Large_M == 0) {
     currConsumable = document.querySelectorAll("#mana-l");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
@@ -964,6 +1021,9 @@ const inflictDamage = (target, damage) => {
 };
 
 const endCombat = () => {
+  player_stats.xp_current += 10;
+  player_stats.score += 10;
+  
   Escape();
 };
 
@@ -988,11 +1048,13 @@ const endTurn = () => {
   } else {
     player_stats.mana_current = player_stats.mana_max;
   }
-  if (inCombat) {
+  enemy_ap = 4;
+  while ((inCombat) && (enemy_ap > 0)){
     calcDamage("Player");
-    calcDamage("Player");
-    calcDamage("Player");
-    calcDamage("Player");
+    enemy_ap--;
+      if (player_stats.hp_current == 0) {
+          enemy_ap = -1;
+      }
   }
   updatePlayerStats();
 
