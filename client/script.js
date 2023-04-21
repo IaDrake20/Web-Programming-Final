@@ -1116,7 +1116,7 @@ const endTurn = () => {
   console.log("end turn");
   player_stats.ap_current = player_stats.ap_max;
   if (player_stats.mana_current < player_stats.mana_max * 0.9) {
-    player_stats.mana_current += player_stats.mana_max / 10;
+    player_stats.mana_current += Math.floor(player_stats.mana_max / 10);
   } else {
     player_stats.mana_current = player_stats.mana_max;
   }
