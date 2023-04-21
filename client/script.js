@@ -1046,6 +1046,7 @@ const playerDeath = () => {
   player_stats.hp_current = 0;
   player_stats.mana_current = 0;
   player_stats.score -= 100;
+  player_stats.ap_current = 0;
   updatePlayerStats();
   Escape();
 };
