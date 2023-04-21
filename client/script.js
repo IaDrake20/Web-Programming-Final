@@ -167,6 +167,8 @@ const updatePlayerStats = () => {
 
   scoreDiv.innerText = player_stats.score;
 
+  levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
+
   let hpPercentage = player_stats.hp_current / player_stats.hp_max;
   let manaPercentage = player_stats.mana_current / player_stats.mana_max;
   let apPercentage = player_stats.ap_current / player_stats.ap_max;
@@ -209,7 +211,7 @@ const checkTurn = () => {
 const Save = async () => {
   //console.log("save "+JSON.parse(player_stats));
   //const data = JSON.parse(player_stats);
-  const myUsername = player_stats.user.Username;
+  const myUsername = player_stats.Username;
   console.log("Saving " + myUsername);
 
   const response = await fetch("http://localhost:3001/updateUser", {
