@@ -182,10 +182,6 @@ const updatePlayerStats = () => {
   if (player_stats.xp_current >= player_stats.xp_threshold) {
     levelUp();
   }
-
-  if (player_stats.ap_current == 0 && enemy_stats.health_current > 0) {
-    endTurn();
-  }
 };
 updatePlayerStats();
 
@@ -781,6 +777,10 @@ const Attack = () => {
   player_stats.ap_current -= 1;
   calcDamage("Enemy");
 
+  if (player_stats.ap_current <= 0) {
+    endTurn();
+  }
+
   updatePlayerStats();
 };
 
@@ -800,6 +800,9 @@ const Magic1 = () => {
   } else {
     console.log("No Magic");
   }
+  if (player_stats.ap_current <= 0) {
+    endTurn();
+  }
 };
 
 // Spell 2 - Fireball
@@ -814,6 +817,9 @@ const Magic2 = () => {
   } else {
     console.log("No Magic");
   }
+  if (player_stats.ap_current <= 0) {
+    endTurn();
+  }
 };
 
 // Spell 3 - Invigorate
@@ -827,6 +833,9 @@ const Magic3 = () => {
   } else {
     console.log("No Magic");
   }
+  if (player_stats.ap_current <= 0) {
+    endTurn();
+  }
 };
 
 // Spell 4 - Escape
@@ -839,6 +848,9 @@ const Magic4 = () => {
     updatePlayerStats();
   } else {
     console.log("No Magic");
+  }
+  if (player_stats.ap_current <= 0) {
+    endTurn();
   }
 };
 
@@ -854,6 +866,9 @@ const Run = () => {
     Escape();
   } else {
     console.log("Escape Unsuccessful");
+  }
+  if (player_stats.ap_current <= 0) {
+    endTurn();
   }
 };
 
@@ -875,6 +890,10 @@ const Investigate = () => {
     " Defense: " +
     enemy_stats.defense;
   middleDiv.appendChild(data);
+
+  if (player_stats.ap_current <= 0) {
+    endTurn();
+  }
 
   updatePlayerStats();
 };
