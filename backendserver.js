@@ -333,7 +333,6 @@ async function findUser(name) {
   //console.log(myUser);
 
   if (myUser == null) {
-    console.log("in finduser return set to false;");
     myUser = false;
   } else {
     myUser = true;
@@ -397,12 +396,15 @@ app.post("/updateUser", async (req, res) => {
   console.log("Trying to overwrite user with current data...");
   const collection = mongo.db("User_Info").collection("user");
   let info = req.body;
-  //const username = info.user.Username;
+  const username = info.Username;
+  console.log("TEST PRINT USERNAME: "+username);
   //const pswrd = collection.findOne({Username: username, Password: password});
   //console.log("Finding "+username+" in db to save data");
-  //await collection.findOne({ Username: username });
-  console.log(req.player_stats);
-  await collection.insertOne(info);
+  const account = await collection.findOne({ Username: username });
+  account = await collection.replaceOne({Username: username}, info);
+  console.log(req.body);
+  console.log(info);
+  //await collection.insertOne(info);
 });
 
 // temp
