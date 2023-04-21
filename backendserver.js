@@ -359,6 +359,8 @@ async function loginUser(name, password) {
 async function addUser(name, password) {
   const collection = mongo.db("User_Info").collection("user");
   await collection.insertOne({
+    Username: name,
+    Password: password,
     hp_max: 100,
     hp_current: 100,
     mana_current: 50,
@@ -371,8 +373,6 @@ async function addUser(name, password) {
     character_level_current: 1,
     score: 69,
     user: {
-      Username: name,
-      Password: password,
       Small_H: 0,
       Medium_H: 0,
       Large_H: 0,
@@ -397,9 +397,10 @@ app.post("/updateUser", async (req, res) => {
   console.log("Trying to overwrite user with current data...");
   const collection = mongo.db("User_Info").collection("user");
   let info = req.body;
-  const username = info.user.Username;
-  console.log("Finding "+username+" in db to save data");
-  await collection.findOne({ Username: username });
+  //const username = info.user.Username;
+  //const pswrd = collection.findOne({Username: username, Password: password});
+  //console.log("Finding "+username+" in db to save data");
+  //await collection.findOne({ Username: username });
   console.log(req.player_stats);
   await collection.insertOne(info);
 });

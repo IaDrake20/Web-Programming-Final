@@ -70,7 +70,7 @@ actionInput.addEventListener("keypress", (e) => {
 const sessionId = window.location.pathname.split("/").pop();
 
 //grab username cookie
-let u_name = {Username: "bob"}; //document.cookie;
+let u_name = document.cookie;
 console.log("client username is "+u_name);
 
 console.log("printing list of cookies "+document.cookie);
@@ -80,11 +80,14 @@ function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
+  console.log("Cookie found: "+parts.pop().split(';').shift());
 }
 
 
 // initialize player_stats object
 let player_stats = {
+  Username: getCookie("Username"),
+  Password: getCookie("Password"),
   character_level_current: 1,
   hp_max: 100,
   hp_current: 100,
@@ -97,7 +100,6 @@ let player_stats = {
   strength: 10,
   score: 69,
   user: {
-    Username: u_name,
     Small_H: 0,
     Medium_H: 0,
     Large_H: 0,
