@@ -70,19 +70,30 @@ actionInput.addEventListener("keypress", (e) => {
 const sessionId = window.location.pathname.split("/").pop();
 
 //grab username cookie
-let u_name = document.cookie;
-console.log("client username is "+u_name);
+const u_name = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("Username="))
+  ?.split("=")[1];
 
-console.log("printing list of cookies "+document.cookie);
+const pwd = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("Password="))
+  ?.split("=")[1];
+
+console.log("client username is: " + u_name);
+console.log("client password is: " + pwd);
+
+console.log("printing list of cookies " + document.cookie);
+console.log(typeof document.cookie);
+console.log(document.cookie);
 
 //grabbed from here: http://stackoverflow.com/questions/10730362/ddg#15724300
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-  console.log("Cookie found: "+parts.pop().split(';').shift());
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  console.log("Cookie found: " + parts.pop().split(";").shift());
 }
-
 
 // initialize player_stats object
 let player_stats = {
@@ -112,8 +123,8 @@ let player_stats = {
     Equipment_Head: 0,
     Equipment_Weapon: 0,
     World_Current_Stage: 0,
-    World_Chaos_Level: 0
-  }
+    World_Chaos_Level: 0,
+  },
 };
 
 let enemy_stats = {
@@ -170,19 +181,19 @@ const updatePlayerStats = () => {
     levelUp();
   }
 
-  if ((player_stats.ap_current == 0) && (enemy_stats.health_current > 0)){
+  if (player_stats.ap_current == 0 && enemy_stats.health_current > 0) {
     endTurn();
   }
 };
 updatePlayerStats();
 
 const levelUp = () => {
-    player_stats.character_level_current++;
-    player_stats.xp_current -= player_stats.xp_threshold;
-    player_stats.hp_max += 10;
-    player_stats.mana_max += 5;
-    updatePlayerStats();
-}
+  player_stats.character_level_current++;
+  player_stats.xp_current -= player_stats.xp_threshold;
+  player_stats.hp_max += 10;
+  player_stats.mana_max += 5;
+  updatePlayerStats();
+};
 
 const checkTurn = () => {
   console.log(turn);
@@ -195,26 +206,24 @@ const checkTurn = () => {
   return true;
 };
 
-
 const Save = async () => {
   //console.log("save "+JSON.parse(player_stats));
   //const data = JSON.parse(player_stats);
   const myUsername = player_stats.user.Username;
-  console.log("Saving "+myUsername);
+  console.log("Saving " + myUsername);
 
-    const response = await fetch("http://localhost:3001/updateUser", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(player_stats),
-    });
+  const response = await fetch("http://localhost:3001/updateUser", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(player_stats),
+  });
 
   const content = await response.json();
   console.log(content);
 };
-
 
 const handleInput = (event) => {
   event.preventDefault();
@@ -300,8 +309,8 @@ const handleInput = (event) => {
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-              player_stats.user.Small_H++;
-              updatePlayerStats();
+            player_stats.user.Small_H++;
+            updatePlayerStats();
             break;
           case 2:
             currConsumable = document.querySelectorAll("#health-m");
@@ -361,228 +370,259 @@ const handleInput = (event) => {
 
     if (Math.random() < 0.5) {
       fetch("http://localhost:3001/Events")
-      .then((response) => response.json())
-      .then((event) => {
+        .then((response) => response.json())
+        .then((event) => {
+          if (Math.random() < event.chance) {
+            const p = document.createElement("p");
+            p.innerText = event.description;
+            middleDiv.appendChild(p);
 
-        if(Math.random() < event.chance){
-          const p = document.createElement("p");
-          p.innerText = event.description;
-          middleDiv.appendChild(p);
-
-          switch (event.id) {
-            case 1: // Treasure
-            switch (Math.floor(Math.random() * 3) % 3) {
-              case 0:
-                fetch("http://localhost:3001/Weapons")
-                  .then((response) => response.json())
-                  .then((data) => {
-                    const itemP = document.createElement("p");
-                    itemP.innerText = data.name;
-                    itemP.style.color = "violet";
-                    middleDiv.appendChild(itemP);
-                    if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
-                      player_stats.user.Equipment_Weapon = data;
-                    }
-                    value = null;
-                  });
-                  updatePlayerStats(); 
-                  break;
-              case 1:
-                fetch("http://localhost:3001/Equipment")
-                  .then((response) => response.json())
-                  .then((data) => {
-                    const itemP = document.createElement("p");
-                    itemP.innerText = data.name;
-                    itemP.style.color = "violet";
-                    middleDiv.appendChild(itemP);
-                    switch (data.position) {
-                      case "legs":
-                        if ((data.id > player_stats.user.Equipment_Legs.id) || (player_stats.user.Equipment_Legs === 0)) {
-                            player_stats.user.Equipment_Legs = data;
+            switch (event.id) {
+              case 1: // Treasure
+                switch (Math.floor(Math.random() * 3) % 3) {
+                  case 0:
+                    fetch("http://localhost:3001/Weapons")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        if (
+                          data.id > player_stats.user.Equipment_Weapon.id ||
+                          player_stats.user.Equipment_Weapon === 0
+                        ) {
+                          player_stats.user.Equipment_Weapon = data;
                         }
-                        break;
-                      case "arms":
-                        if ((data.id > player_stats.user.Equipment_Arms.id) || (player_stats.user.Equipment_Arms === 0)) {
-                            player_stats.user.Equipment_Arms = data;
-                        }
-                        break;
-                      case "chest":
-                        if ((data.id > player_stats.user.Equipment_Chest.id) || (player_stats.user.Equipment_Chest === 0)) {
-                            player_stats.user.Equipment_Chest = data;
-                        }
-                        break;
-                      case "head":
-                        if ((data.id > player_stats.user.Equipment_Head.id) || (player_stats.user.Equipment_Head === 0)){
-                          player_stats.user.Equipment_Head = data;
-                        }
-                        break;
-                    }
-                    value = null;
-                  });
-                updatePlayerStats(); 
-                break;
-              case 2:
-                fetch("http://localhost:3001/Weapons")
-                  .then((response) => response.json())
-                  .then((data) => {
-                    const itemP = document.createElement("p");
-                    itemP.innerText = data.name;
-                    itemP.style.color = "violet";
-                    middleDiv.appendChild(itemP);
-                    if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
-                      player_stats.user.Equipment_Weapon = data;
-                    }
-                  });
-                fetch("http://localhost:3001/Equipment")
-                  .then((response) => response.json())
-                  .then((data) => {
-                    const itemP = document.createElement("p");
-                    itemP.innerText = data.name;
-                    itemP.style.color = "violet";
-                    middleDiv.appendChild(itemP);
-                    switch (data.position) {
-                      case "legs":
-                        if ((data.id > player_stats.user.Equipment_Legs.id) || (player_stats.user.Equipment_Legs === 0)) {
-                            player_stats.user.Equipment_Legs = data;
-                        }
-                        break;
-                      case "arms":
-                        if ((data.id > player_stats.user.Equipment_Arms.id) || (player_stats.user.Equipment_Arms === 0)) {
-                            player_stats.user.Equipment_Arms = data;
-                        }
-                        break;
-                      case "chest":
-                        if ((data.id > player_stats.user.Equipment_Chest.id) || (player_stats.user.Equipment_Chest === 0)) {
-                            player_stats.user.Equipment_Chest = data;
-                        }
-                        break;
-                      case "head":
-                        if ((data.id > player_stats.user.Equipment_Head.id) || (player_stats.user.Equipment_Head === 0)){
-                          player_stats.user.Equipment_Head = data;
-                        }
-                        break;
-                    }
-                  });
-                  updatePlayerStats(); 
-                break;
-              }
-              break;
-            case 2: // Demon King Altar
-              switch (Math.floor(Math.random() * 2) % 2) {
-                case 0:
-                  fetch("http://localhost:3001/Weapons")
-                    .then((response) => response.json())
-                    .then((data) => {
-                      const itemP = document.createElement("p");
-                      itemP.innerText = data.name;
-                      itemP.style.color = "violet";
-                      middleDiv.appendChild(itemP);
-                      if ((data.id > player_stats.user.Equipment_Weapon.id) || (player_stats.user.Equipment_Weapon === 0)) {
-                        player_stats.user.Equipment_Weapon = data;
-                      }
-                      updatePlayerStats();
-                    });
+                        value = null;
+                      });
+                    updatePlayerStats();
                     break;
-                case 1:
-                  fetch("http://localhost:3001/Consumables")
-                    .then((response) => response.json())
-                    .then((data) => {
-                      const itemP = document.createElement("p");
-                      itemP.innerText = data.name;
-                      itemP.style.color = "violet";
-                      middleDiv.appendChild(itemP);
-                      switch (data.id) {
-                        case 1:
-                          currConsumable = document.querySelectorAll("#health-s");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Small_H++;
-                          updatePlayerStats();
-                          break;
-                        case 2:
-                          currConsumable = document.querySelectorAll("#health-m");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Medium_H++;
-                          updatePlayerStats();
-                          break;
-                        case 3:
-                          currConsumable = document.querySelectorAll("#health-l");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Large_H++;
-                          updatePlayerStats();
-                          break;
-                        case 4:
-                          currConsumable = document.querySelectorAll("#mana-s");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Small_M++;
-                          updatePlayerStats();
-                          break;
-                        case 5:
-                          currConsumable = document.querySelectorAll("#mana-m");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Medium_M++;
-                          updatePlayerStats();
-                          break;
-                        case 6:
-                          currConsumable = document.querySelectorAll("#mana-l");
-                          currConsumable.forEach((consumable) => {
-                            consumable.style.display = "flex";
-                          });
-                          player_stats.user.Large_M++;
-                          updatePlayerStats();
-                          break;
-                      }
-                    });
+                  case 1:
+                    fetch("http://localhost:3001/Equipment")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        switch (data.position) {
+                          case "legs":
+                            if (
+                              data.id > player_stats.user.Equipment_Legs.id ||
+                              player_stats.user.Equipment_Legs === 0
+                            ) {
+                              player_stats.user.Equipment_Legs = data;
+                            }
+                            break;
+                          case "arms":
+                            if (
+                              data.id > player_stats.user.Equipment_Arms.id ||
+                              player_stats.user.Equipment_Arms === 0
+                            ) {
+                              player_stats.user.Equipment_Arms = data;
+                            }
+                            break;
+                          case "chest":
+                            if (
+                              data.id > player_stats.user.Equipment_Chest.id ||
+                              player_stats.user.Equipment_Chest === 0
+                            ) {
+                              player_stats.user.Equipment_Chest = data;
+                            }
+                            break;
+                          case "head":
+                            if (
+                              data.id > player_stats.user.Equipment_Head.id ||
+                              player_stats.user.Equipment_Head === 0
+                            ) {
+                              player_stats.user.Equipment_Head = data;
+                            }
+                            break;
+                        }
+                        value = null;
+                      });
+                    updatePlayerStats();
+                    break;
+                  case 2:
+                    fetch("http://localhost:3001/Weapons")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        if (
+                          data.id > player_stats.user.Equipment_Weapon.id ||
+                          player_stats.user.Equipment_Weapon === 0
+                        ) {
+                          player_stats.user.Equipment_Weapon = data;
+                        }
+                      });
+                    fetch("http://localhost:3001/Equipment")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        switch (data.position) {
+                          case "legs":
+                            if (
+                              data.id > player_stats.user.Equipment_Legs.id ||
+                              player_stats.user.Equipment_Legs === 0
+                            ) {
+                              player_stats.user.Equipment_Legs = data;
+                            }
+                            break;
+                          case "arms":
+                            if (
+                              data.id > player_stats.user.Equipment_Arms.id ||
+                              player_stats.user.Equipment_Arms === 0
+                            ) {
+                              player_stats.user.Equipment_Arms = data;
+                            }
+                            break;
+                          case "chest":
+                            if (
+                              data.id > player_stats.user.Equipment_Chest.id ||
+                              player_stats.user.Equipment_Chest === 0
+                            ) {
+                              player_stats.user.Equipment_Chest = data;
+                            }
+                            break;
+                          case "head":
+                            if (
+                              data.id > player_stats.user.Equipment_Head.id ||
+                              player_stats.user.Equipment_Head === 0
+                            ) {
+                              player_stats.user.Equipment_Head = data;
+                            }
+                            break;
+                        }
+                      });
+                    updatePlayerStats();
+                    break;
                 }
-              break;
-            case 3: // Trap
-              if (Math.random() > 0.5) {
-                const p = document.createElement("p");
-                p.innerText = "You Evaded the Trap";
-                middleDiv.appendChild(p);
-              }
-              else {
-                const p = document.createElement("p");
-                p.innerText = "You Sprung The Trap!";
-                middleDiv.appendChild(p);
-                player_stats.hp_current -= player_stats.character_level_current * 10;
-              }
-              break;
-            case 4: // Combat
-              const fight = document.createElement("p");
-              fight.innerText = "An Enemy Approaches";
-              middleDiv.appendChild(fight);
-              Combat();
-              break;
-            case 5: // Ohl
-              const ohl = document.createElement("p");
-              ohl.innerText = "You Deserve an A+!";
-              middleDiv.appendChild(ohl);
-              player_stats.hp_current = player_stats.hp_max;
-              player_stats.mana_current = player_stats.mana_max;
-              break;
-            case 6: // Caravan (Unimplemented)
-              break;
-            case 7: // Mine (Unimplemented)
-              break;
-            case 8: // Thief (Unimplemented)
-              break;
+                break;
+              case 2: // Demon King Altar
+                switch (Math.floor(Math.random() * 2) % 2) {
+                  case 0:
+                    fetch("http://localhost:3001/Weapons")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        if (
+                          data.id > player_stats.user.Equipment_Weapon.id ||
+                          player_stats.user.Equipment_Weapon === 0
+                        ) {
+                          player_stats.user.Equipment_Weapon = data;
+                        }
+                        updatePlayerStats();
+                      });
+                    break;
+                  case 1:
+                    fetch("http://localhost:3001/Consumables")
+                      .then((response) => response.json())
+                      .then((data) => {
+                        const itemP = document.createElement("p");
+                        itemP.innerText = data.name;
+                        itemP.style.color = "violet";
+                        middleDiv.appendChild(itemP);
+                        switch (data.id) {
+                          case 1:
+                            currConsumable = document.querySelectorAll("#health-s");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Small_H++;
+                            updatePlayerStats();
+                            break;
+                          case 2:
+                            currConsumable = document.querySelectorAll("#health-m");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Medium_H++;
+                            updatePlayerStats();
+                            break;
+                          case 3:
+                            currConsumable = document.querySelectorAll("#health-l");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Large_H++;
+                            updatePlayerStats();
+                            break;
+                          case 4:
+                            currConsumable = document.querySelectorAll("#mana-s");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Small_M++;
+                            updatePlayerStats();
+                            break;
+                          case 5:
+                            currConsumable = document.querySelectorAll("#mana-m");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Medium_M++;
+                            updatePlayerStats();
+                            break;
+                          case 6:
+                            currConsumable = document.querySelectorAll("#mana-l");
+                            currConsumable.forEach((consumable) => {
+                              consumable.style.display = "flex";
+                            });
+                            player_stats.user.Large_M++;
+                            updatePlayerStats();
+                            break;
+                        }
+                      });
+                }
+                break;
+              case 3: // Trap
+                if (Math.random() > 0.5) {
+                  const p = document.createElement("p");
+                  p.innerText = "You Evaded the Trap";
+                  middleDiv.appendChild(p);
+                } else {
+                  const p = document.createElement("p");
+                  p.innerText = "You Sprung The Trap!";
+                  middleDiv.appendChild(p);
+                  player_stats.hp_current -= player_stats.character_level_current * 10;
+                }
+                break;
+              case 4: // Combat
+                const fight = document.createElement("p");
+                fight.innerText = "An Enemy Approaches";
+                middleDiv.appendChild(fight);
+                Combat();
+                break;
+              case 5: // Ohl
+                const ohl = document.createElement("p");
+                ohl.innerText = "You Deserve an A+!";
+                middleDiv.appendChild(ohl);
+                player_stats.hp_current = player_stats.hp_max;
+                player_stats.mana_current = player_stats.mana_max;
+                break;
+              case 6: // Caravan (Unimplemented)
+                break;
+              case 7: // Mine (Unimplemented)
+                break;
+              case 8: // Thief (Unimplemented)
+                break;
             }
           }
-      });
+        });
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
-    if ((Math.random() * 10) < 5) {
+    if (Math.random() * 10 < 5) {
       fetch("http://localhost:3001/Consumables")
         .then((response) => response.json())
         .then((data) => {
@@ -594,7 +634,7 @@ const handleInput = (event) => {
             case 1:
               currConsumable = document.querySelectorAll("#health-s");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Small_H++;
               updatePlayerStats();
@@ -602,7 +642,7 @@ const handleInput = (event) => {
             case 2:
               currConsumable = document.querySelectorAll("#health-m");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Medium_H++;
               updatePlayerStats();
@@ -610,7 +650,7 @@ const handleInput = (event) => {
             case 3:
               currConsumable = document.querySelectorAll("#health-l");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Large_H++;
               updatePlayerStats();
@@ -618,7 +658,7 @@ const handleInput = (event) => {
             case 4:
               currConsumable = document.querySelectorAll("#mana-s");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Small_M++;
               updatePlayerStats();
@@ -626,7 +666,7 @@ const handleInput = (event) => {
             case 5:
               currConsumable = document.querySelectorAll("#mana-m");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Medium_M++;
               updatePlayerStats();
@@ -634,17 +674,17 @@ const handleInput = (event) => {
             case 6:
               currConsumable = document.querySelectorAll("#mana-l");
               currConsumable.forEach((consumable) => {
-              consumable.style.display = "flex";
+                consumable.style.display = "flex";
               });
               player_stats.user.Large_M++;
               updatePlayerStats();
               break;
-            }
+          }
         });
     } else {
-        const inv = document.createElement("p");
-        inv.innerText = "You Didn't Find Anything Useful.";
-        middleDiv.appendChild(inv);
+      const inv = document.createElement("p");
+      inv.innerText = "You Didn't Find Anything Useful.";
+      middleDiv.appendChild(inv);
     }
   } else if (value === "hunt") {
     p.style.display = "none";
@@ -941,7 +981,7 @@ const Consume6 = () => {
 
 const calcDamage = (target) => {
   damageMult = Math.random();
-  randomComponent = 0.75 + ((Math.random() * 5) / 10);
+  randomComponent = 0.75 + (Math.random() * 5) / 10;
   damage = 0;
   if (target === "Enemy") {
     if (damageMult > 0.95) {
@@ -1060,12 +1100,12 @@ const endTurn = () => {
     player_stats.mana_current = player_stats.mana_max;
   }
   enemy_ap = 4;
-  while ((inCombat) && (enemy_ap > 0)){
+  while (inCombat && enemy_ap > 0) {
     calcDamage("Player");
     enemy_ap--;
-      if (player_stats.hp_current == 0) {
-          enemy_ap = -1;
-      }
+    if (player_stats.hp_current == 0) {
+      enemy_ap = -1;
+    }
   }
   updatePlayerStats();
 

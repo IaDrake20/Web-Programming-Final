@@ -107,9 +107,9 @@ const login = async () => {
   }
 
   //make username cookie for client to know who it is
-  document.cookie ={"Username":username};
-  document.cookie ={"Password": userpassword};
-  console.log("Created cookie: "+document.cookie);
+  document.cookie = `Username=${username}`;
+  document.cookie = `Password=${userpassword}`;
+  console.log("Created cookie: " + document.cookie);
 
   // validate password
   if (!userpassword) {
