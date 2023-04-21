@@ -396,11 +396,12 @@ async function addUser(name, password) {
 app.post("/updateUser", async (req, res) => {
   console.log("Trying to overwrite user with current data...");
   const collection = mongo.db("User_Info").collection("user");
-  let username = req.body;
+  let info = req.body;
+  const username = info.user.Username;
   console.log("Finding "+username+" in db to save data");
   await collection.findOne({ Username: username });
   console.log(req.player_stats);
-  await collection.insertOne(req.player_stats);
+  await collection.insertOne(info);
 });
 
 // temp

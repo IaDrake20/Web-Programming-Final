@@ -70,7 +70,7 @@ actionInput.addEventListener("keypress", (e) => {
 const sessionId = window.location.pathname.split("/").pop();
 
 //grab username cookie
-let u_name = document.cookie;
+let u_name = {Username: "bob"}; //document.cookie;
 console.log("client username is "+u_name);
 
 console.log("printing list of cookies "+document.cookie);
@@ -204,7 +204,7 @@ const Save = async () => {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify(myUsername),
+      body: JSON.stringify(player_stats),
     });
 
   const content = await response.json();
