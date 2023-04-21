@@ -154,6 +154,8 @@ const updatePlayerStats = () => {
 
   experienceValues.innerText = `${player_stats.xp_current}/${player_stats.xp_threshold}`;
 
+  scoreDiv.innerText = player_stats.score;
+
   let hpPercentage = player_stats.hp_current / player_stats.hp_max;
   let manaPercentage = player_stats.mana_current / player_stats.mana_max;
   let apPercentage = player_stats.ap_current / player_stats.ap_max;
@@ -168,7 +170,7 @@ const updatePlayerStats = () => {
     levelUp();
   }
 
-  if (player_stats.ap_current == 0) {
+  if ((player_stats.ap_current == 0) && (enemy_stats.health_current > 0)){
     endTurn();
   }
 };
@@ -298,42 +300,48 @@ const handleInput = (event) => {
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Small_H++;
+              player_stats.user.Small_H++;
+              updatePlayerStats();
             break;
           case 2:
             currConsumable = document.querySelectorAll("#health-m");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Medium_H++;
+            player_stats.user.Medium_H++;
+            updatePlayerStats();
             break;
           case 3:
             currConsumable = document.querySelectorAll("#health-l");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Large_H++;
+            player_stats.user.Large_H++;
+            updatePlayerStats();
             break;
           case 4:
             currConsumable = document.querySelectorAll("#mana-s");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Small_M++;
+            player_stats.user.Small_M++;
+            updatePlayerStats();
             break;
           case 5:
             currConsumable = document.querySelectorAll("#mana-m");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Medium_M++;
+            player_stats.user.Medium_M++;
+            updatePlayerStats();
             break;
           case 6:
             currConsumable = document.querySelectorAll("#mana-l");
             currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
             });
-            player_stats.Large_M++;
+            player_stats.user.Large_M++;
+            updatePlayerStats();
             break;
         }
         value = null;
@@ -489,7 +497,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Small_H++;
+                          player_stats.user.Small_H++;
                           updatePlayerStats();
                           break;
                         case 2:
@@ -497,7 +505,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Medium_H++;
+                          player_stats.user.Medium_H++;
                           updatePlayerStats();
                           break;
                         case 3:
@@ -505,7 +513,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Large_H++;
+                          player_stats.user.Large_H++;
                           updatePlayerStats();
                           break;
                         case 4:
@@ -513,7 +521,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Small_M++;
+                          player_stats.user.Small_M++;
                           updatePlayerStats();
                           break;
                         case 5:
@@ -521,7 +529,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Medium_M++;
+                          player_stats.user.Medium_M++;
                           updatePlayerStats();
                           break;
                         case 6:
@@ -529,7 +537,7 @@ const handleInput = (event) => {
                           currConsumable.forEach((consumable) => {
                             consumable.style.display = "flex";
                           });
-                          player_stats.Large_M++;
+                          player_stats.user.Large_M++;
                           updatePlayerStats();
                           break;
                       }
@@ -588,42 +596,48 @@ const handleInput = (event) => {
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Small_H++;
+              player_stats.user.Small_H++;
+              updatePlayerStats();
               break;
             case 2:
               currConsumable = document.querySelectorAll("#health-m");
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Medium_H++;
+              player_stats.user.Medium_H++;
+              updatePlayerStats();
               break;
             case 3:
               currConsumable = document.querySelectorAll("#health-l");
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Large_H++;
+              player_stats.user.Large_H++;
+              updatePlayerStats();
               break;
             case 4:
               currConsumable = document.querySelectorAll("#mana-s");
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Small_M++;
+              player_stats.user.Small_M++;
+              updatePlayerStats();
               break;
             case 5:
               currConsumable = document.querySelectorAll("#mana-m");
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Medium_M++;
+              player_stats.user.Medium_M++;
+              updatePlayerStats();
               break;
             case 6:
               currConsumable = document.querySelectorAll("#mana-l");
               currConsumable.forEach((consumable) => {
               consumable.style.display = "flex";
               });
-              player_stats.Large_M++;
+              player_stats.user.Large_M++;
+              updatePlayerStats();
               break;
             }
         });
@@ -830,15 +844,14 @@ const Consume1 = () => {
   } else {
     player_stats.hp_current += 20;
   }
-  player_stats.Small_H--;
+  player_stats.user.Small_H--;
   updatePlayerStats();
-  if (player_stats.Small_H == 0) {
+  if (player_stats.user.Small_H == 0) {
     currConsumable = document.querySelectorAll("#health-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const Consume2 = () => {
@@ -848,15 +861,14 @@ const Consume2 = () => {
   } else {
     player_stats.hp_current += 50;
   }
-  player_stats.Medium_H--;
+  player_stats.user.Medium_H--;
   updatePlayerStats();
-  if (player_stats.Medium_H == 0) {
+  if (player_stats.user.Medium_H == 0) {
     currConsumable = document.querySelectorAll("#health-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const Consume3 = () => {
@@ -866,15 +878,14 @@ const Consume3 = () => {
   } else {
     player_stats.hp_current += 100;
   }
-  player_stats.Large_H--;
+  player_stats.user.Large_H--;
   updatePlayerStats();
-  if (player_stats.Large_H == 0) {
+  if (player_stats.user.Large_H == 0) {
     currConsumable = document.querySelectorAll("#health-l");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const Consume4 = () => {
@@ -884,15 +895,14 @@ const Consume4 = () => {
   } else {
     player_stats.mana_current += 10;
   }
-  player_stats.Small_M--;
+  player_stats.user.Small_M--;
   updatePlayerStats();
-  if (player_stats.Small_M == 0) {
+  if (player_stats.user.Small_M == 0) {
     currConsumable = document.querySelectorAll("#mana-s");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const Consume5 = () => {
@@ -902,15 +912,14 @@ const Consume5 = () => {
   } else {
     player_stats.mana_current += 25;
   }
-  player_stats.Medium_M--;
+  player_stats.user.Medium_M--;
   updatePlayerStats();
-  if (player_stats.Medium_M == 0) {
+  if (player_stats.user.Medium_M == 0) {
     currConsumable = document.querySelectorAll("#mana-m");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const Consume6 = () => {
@@ -920,19 +929,19 @@ const Consume6 = () => {
   } else {
     player_stats.mana_current += 50;
   }
-  player_stats.Large_M--;
+  player_stats.user.Large_M--;
   updatePlayerStats();
-  if (player_stats.Large_M == 0) {
+  if (player_stats.user.Large_M == 0) {
     currConsumable = document.querySelectorAll("#mana-l");
     currConsumable.forEach((consumable) => {
       consumable.style.display = "none";
     });
   }
-  updatePlayerStats();
 };
 
 const calcDamage = (target) => {
   damageMult = Math.random();
+  randomComponent = 0.75 + ((Math.random() * 5) / 10);
   damage = 0;
   if (target === "Enemy") {
     if (damageMult > 0.95) {
@@ -958,6 +967,7 @@ const calcDamage = (target) => {
     if (damage < 0) {
       damage = 1;
     }
+    damage = Math.ceil(damage * randomComponent);
     inflictDamage("Enemy", damage);
   }
   if (target === "Player") {
@@ -985,6 +995,7 @@ const calcDamage = (target) => {
     } else {
       damage = enemy_stats.attack - player_defense;
     }
+    damage = Math.ceil(damage * randomComponent);
     inflictDamage("Player", damage);
   }
 };
@@ -1022,8 +1033,8 @@ const inflictDamage = (target, damage) => {
 
 const endCombat = () => {
   player_stats.xp_current += 10;
-  player_stats.score += 10;
-  
+  player_stats.score += 100;
+  updatePlayerStats();
   Escape();
 };
 
