@@ -400,8 +400,8 @@ app.post("/updateUser", async (req, res) => {
   console.log("TEST PRINT USERNAME: "+username);
   //const pswrd = collection.findOne({Username: username, Password: password});
   //console.log("Finding "+username+" in db to save data");
-  const account = await collection.findOne({ Username: username });
-  account = await collection.replaceOne({Username: username}, info);
+  let account = await collection.findOne({ Username: username });
+  await collection.replaceOne({Username: username}, info);
   console.log(req.body);
   console.log(info);
   //await collection.insertOne(info);
