@@ -224,6 +224,7 @@ const levelUp = () => {
   player_stats.xp_current -= player_stats.xp_threshold;
   player_stats.hp_max += 10;
   player_stats.mana_max += 5;
+  player_stats.strength += 5;
   updatePlayerStats();
 };
 
