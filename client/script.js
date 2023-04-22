@@ -692,7 +692,7 @@ const handleInput = (event) => {
                 }
               case 5: // Ohl
                 const ohl = document.createElement("p");
-                ohl.innerText = "You Deserve an A+!";
+                ohl.innerText = 'Dr. Ohl approaches you from the shadows, "You Deserve an A+!"';
                 middleDiv.appendChild(ohl);
                 player_stats.hp_current = player_stats.hp_max;
                 player_stats.mana_current = player_stats.mana_max;
@@ -780,8 +780,16 @@ const handleInput = (event) => {
       middleDiv.appendChild(inv);
     }
   } else if (value === "hunt") {
-    p.style.display = "none";
-    Combat();
+      if ((player_stats.user.World_Chaos_Level % 10) == 9) {
+        const p = document.createElement("p");
+        p.innerText = "It's too dangerous to be hunting right now";
+        middleDiv.appendChild(p);
+        player_stats.user.World_Chaos_Level--;
+        updatePlayerStats();
+      } else {
+        p.style.display = "none";
+        Combat();
+      }
   } else if (value === "inventory") {
     p.style.display = "none";
     invH = document.createElement("p");
@@ -974,18 +982,28 @@ const Magic4 = () => {
 // Run Function
 const Run = () => {
   if (!checkTurn()) return;
-  chance = Math.random() * 100;
-  player_stats.ap_current -= 1;
-
-  updatePlayerStats();
-  if (chance > 66) {
-    console.log("Escape Successful");
-    Escape();
-  } else {
-    console.log("Escape Unsuccessful");
+  if (isBoss) {
+    const p = document.createElement("p");
+    p.innerText = "You cannot run from an Enemy this Powerful.";
+    middleDiv.appendChild(p);
   }
-  if (player_stats.ap_current <= 0) {
-    endTurn();
+  else {
+    chance = Math.random() * 100;
+    player_stats.ap_current -= 1;
+    updatePlayerStats();
+    if (chance > 66) {
+      const p = document.createElement("p");
+      p.innerText = "You Escaped with your life...";
+      middleDiv.appendChild(p);
+      Escape();
+    } else {
+      const p = document.createElement("p");
+      p.innerText = "Your Escape was blocked...";
+      middleDiv.appendChild(p);
+    }
+    if (player_stats.ap_current <= 0) {
+      endTurn();
+    }
   }
 };
 
