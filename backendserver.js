@@ -241,24 +241,35 @@ app.get("/Consumables", async (req, res) => {
   res.json(item);
   console.log("Consumable retrieved! " + item.name);
 });
-app.get("/Equipment", async (req, res) => {
+app.post("/Equipment", async (req, res) => {
   console.log("Equipment Requested...");
+  let info = req.body;
   const collection = mongo.db("db_loot").collection("Equipment");
-  const item = await getRandomDBItem(1, 36, collection);
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage + 3, collection);
   res.json(item);
   console.log("Equipment retrieved! " + item.name);
 });
-app.get("/Weapons", async (req, res) => {
+app.post("/Weapons", async (req, res) => {
   console.log("Weapon requested...");
+  let info = req.body;
   const collection = mongo.db("db_loot").collection("Weapons");
-  const item = await getRandomDBItem(1, 8, collection);
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage, collection);
   res.json(item);
   console.log("Weapon retrieved! " + item.name);
 });
-app.get("/Mobs", async (req, res) => {
+app.post("/Mobs", async (req, res) => {
   console.log("Mob requested...");
+  let info = req.body;
   const collection = mongo.db("db_enemy").collection("mobs");
-  const item = await getRandomDBItem(1, 2, collection);
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage + 1, collection);
+  res.json(item);
+  console.log(item.description);
+});
+app.post("/Bosses", async (req, res) => {
+  console.log("Mob requested...");
+  let info = req.body;
+  const collection = mongo.db("db_enemy").collection("bosses");
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage, collection);
   res.json(item);
   console.log(item.description);
 });
@@ -383,8 +394,8 @@ async function addUser(name, password) {
       Equipment_Arms: 0,
       Equipment_Head: 0,
       Equipment_Weapon: 0,
-      World_Current_Stage: 0,
-      World_Chaos_Level: 0,
+      World_Current_Stage: 1,
+      World_Chaos_Level: 1,
     },
   });
   console.log("user added to db");

@@ -122,8 +122,8 @@ let player_stats = {
     Equipment_Arms: 0,
     Equipment_Head: 0,
     Equipment_Weapon: 0,
-    World_Current_Stage: 0,
-    World_Chaos_Level: 0,
+    World_Current_Stage: 1,
+    World_Chaos_Level: 1,
   },
 };
 
@@ -149,41 +149,72 @@ let turn = false;
 
 let inCombat = false;
 
-let chaos_level_current = 1;
-
 // initialize other UI things
 levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
-chaos.innerText = `${chaos_level_current}`;
+chaos.innerText = player_stats.user.World_Chaos_Level;
 scoreDiv.innerText = player_stats.score;
 
 const updatePlayerStats = () => {
-  healthValues.innerText = `${player_stats.hp_current}/${player_stats.hp_max}`;
+  setTimeout(() => {
+    healthValues.innerText = `${player_stats.hp_current}/${player_stats.hp_max}`;
+    manaValues.innerText = `${player_stats.mana_current}/${player_stats.mana_max}`;
+    actionPointsValues.innerText = `${player_stats.ap_current}/${player_stats.ap_max}`;
+    experienceValues.innerText = `${player_stats.xp_current}/${player_stats.xp_threshold}`;
+    chaos.innerText = player_stats.user.World_Chaos_Level;
+    scoreDiv.innerText = player_stats.score;
+    levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
 
-  manaValues.innerText = `${player_stats.mana_current}/${player_stats.mana_max}`;
+    let hpPercentage = player_stats.hp_current / player_stats.hp_max;
+    let manaPercentage = player_stats.mana_current / player_stats.mana_max;
+    let apPercentage = player_stats.ap_current / player_stats.ap_max;
+    let xpPercentage = player_stats.xp_current / player_stats.xp_threshold;
 
-  actionPointsValues.innerText = `${player_stats.ap_current}/${player_stats.ap_max}`;
+    healthBar.style.width = `${150 * hpPercentage}px`;
+    manaBar.style.width = `${150 * manaPercentage}px`;
+    actionPointsBar.style.width = `${150 * apPercentage}px`;
+    experienceBar.style.width = `${150 * xpPercentage}px`;
 
-  experienceValues.innerText = `${player_stats.xp_current}/${player_stats.xp_threshold}`;
-
-  scoreDiv.innerText = player_stats.score;
-
-  levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
-
-  let hpPercentage = player_stats.hp_current / player_stats.hp_max;
-  let manaPercentage = player_stats.mana_current / player_stats.mana_max;
-  let apPercentage = player_stats.ap_current / player_stats.ap_max;
-  let xpPercentage = player_stats.xp_current / player_stats.xp_threshold;
-
-  healthBar.style.width = `${150 * hpPercentage}px`;
-  manaBar.style.width = `${150 * manaPercentage}px`;
-  actionPointsBar.style.width = `${150 * apPercentage}px`;
-  experienceBar.style.width = `${150 * xpPercentage}px`;
-
-  if (player_stats.xp_current >= player_stats.xp_threshold) {
-    levelUp();
-  }
+    if (player_stats.xp_current >= player_stats.xp_threshold) {
+      levelUp();
+    }
+    if (player_stats.user.World_Chaos_Level >= (player_stats.user.World_Current_Stage * 10)) {
+      bossEncounter();
+    }
+  }, 100);
 };
 updatePlayerStats();
+
+const bossEncounter = () => {
+  const fight = document.createElement("p");
+  fight.innerText = "A Powerful Enemy Approaches...";
+  middleDiv.appendChild(fight);
+  BossCombat();
+  player_stats.user.World_Current_Stage++;
+}
+
+const BossCombat = () => {
+  exploreDiv.style.display = "none";
+  saveButton.style.display = "none";
+  legendBox.style.display = "none";
+  combatDiv.style.display = "flex";
+  inCombat = true;
+  player_stats.ap_current = player_stats.ap_max;
+  fetch("http://localhost:3001/Bosses", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      enemyGeneration(data);
+      const p = document.createElement("p");
+      p.innerText = data.description;
+      middleDiv.appendChild(p);
+  });
+}
 
 const levelUp = () => {
   player_stats.character_level_current++;
@@ -234,7 +265,6 @@ const handleInput = (event) => {
   value = actionInput.value;
   // scroll middleDiv down to see the new entry
   p.scrollIntoView();
-
   // if user inputs a keyword, subtract (or add) to player stats
   // temporary, for testing
   if (value === "hp") {
@@ -259,7 +289,14 @@ const handleInput = (event) => {
     if (player_stats.xp_current >= player_stats.xp_threshold)
       player_stats.xp_current = player_stats.xp_threshold;
   } else if (value === "equipment") {
-    fetch("http://localhost:3001/Equipment")
+    fetch("http://localhost:3001/Equipment", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
       .then((response) => response.json())
       .then((data) => {
         const itemP = document.createElement("p");
@@ -283,7 +320,14 @@ const handleInput = (event) => {
         value = null;
       });
   } else if (value === "weapon") {
-    fetch("http://localhost:3001/Weapons")
+    fetch("http://localhost:3001/Weapons", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
       .then((response) => response.json())
       .then((data) => {
         const itemP = document.createElement("p");
@@ -365,8 +409,8 @@ const handleInput = (event) => {
     if (player_stats.mana_current < player_stats.mana_max) {
       player_stats.mana_current++;
     }
-
-    if (Math.random() < 0.5) {
+    
+    if (Math.random() < 0.9) {
       fetch("http://localhost:3001/Events")
         .then((response) => response.json())
         .then((event) => {
@@ -379,7 +423,14 @@ const handleInput = (event) => {
               case 1: // Treasure
                 switch (Math.floor(Math.random() * 3) % 3) {
                   case 0:
-                    fetch("http://localhost:3001/Weapons")
+                    fetch("http://localhost:3001/Weapons", {
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                        method: "POST",
+                        body: JSON.stringify(player_stats),
+                    })
                       .then((response) => response.json())
                       .then((data) => {
                         const itemP = document.createElement("p");
@@ -397,7 +448,14 @@ const handleInput = (event) => {
                     updatePlayerStats();
                     break;
                   case 1:
-                    fetch("http://localhost:3001/Equipment")
+                    fetch("http://localhost:3001/Equipment", {
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                        method: "POST",
+                        body: JSON.stringify(player_stats),
+                    })
                       .then((response) => response.json())
                       .then((data) => {
                         const itemP = document.createElement("p");
@@ -443,7 +501,14 @@ const handleInput = (event) => {
                     updatePlayerStats();
                     break;
                   case 2:
-                    fetch("http://localhost:3001/Weapons")
+                    fetch("http://localhost:3001/Weapons", {
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                        method: "POST",
+                        body: JSON.stringify(player_stats),
+                    })
                       .then((response) => response.json())
                       .then((data) => {
                         const itemP = document.createElement("p");
@@ -457,7 +522,14 @@ const handleInput = (event) => {
                           player_stats.user.Equipment_Weapon = data;
                         }
                       });
-                    fetch("http://localhost:3001/Equipment")
+                    fetch("http://localhost:3001/Equipment", {
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      method: "POST",
+                      body: JSON.stringify(player_stats),
+                    })
                       .then((response) => response.json())
                       .then((data) => {
                         const itemP = document.createElement("p");
@@ -506,7 +578,14 @@ const handleInput = (event) => {
               case 2: // Demon King Altar
                 switch (Math.floor(Math.random() * 2) % 2) {
                   case 0:
-                    fetch("http://localhost:3001/Weapons")
+                    fetch("http://localhost:3001/Weapons", {
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                        method: "POST",
+                        body: JSON.stringify(player_stats),
+                    })
                       .then((response) => response.json())
                       .then((data) => {
                         const itemP = document.createElement("p");
@@ -519,8 +598,8 @@ const handleInput = (event) => {
                         ) {
                           player_stats.user.Equipment_Weapon = data;
                         }
-                        updatePlayerStats();
                       });
+                    updatePlayerStats();
                     break;
                   case 1:
                     fetch("http://localhost:3001/Consumables")
@@ -592,15 +671,21 @@ const handleInput = (event) => {
                   const p = document.createElement("p");
                   p.innerText = "You Sprung The Trap!";
                   middleDiv.appendChild(p);
-                  player_stats.hp_current -= player_stats.character_level_current * 10;
+                  player_stats.hp_current -= player_stats.character_level_current * 30;
+                  updatePlayerStats();
                 }
                 break;
               case 4: // Combat
-                const fight = document.createElement("p");
-                fight.innerText = "An Enemy Approaches";
-                middleDiv.appendChild(fight);
-                Combat();
-                break;
+                if ((player_stats.user.World_Chaos_Level % 10) == 0) {
+                  player_stats.user.World_Chaos_Level--;
+                  updatePlayerStats();
+                } else {
+                  const fight = document.createElement("p");
+                  fight.innerText = "An Enemy Approaches";
+                  middleDiv.appendChild(fight);
+                  Combat();
+                  break;
+                }
               case 5: // Ohl
                 const ohl = document.createElement("p");
                 ohl.innerText = "You Deserve an A+!";
@@ -615,8 +700,14 @@ const handleInput = (event) => {
               case 8: // Thief (Unimplemented)
                 break;
             }
+          } else {
+            player_stats.user.World_Chaos_Level--;
+            updatePlayerStats();
           }
         });
+    } else {
+      player_stats.user.World_Chaos_Level--;
+      updatePlayerStats();
     }
   } else if (value === "search") {
     p.style.color = "skyblue";
@@ -724,13 +815,18 @@ const handleInput = (event) => {
     middleDiv.appendChild(invA);
     middleDiv.appendChild(invL);
     middleDiv.appendChild(invW);
+    player_stats.user.World_Chaos_Level--;
+    updatePlayerStats();
   } else if (value === "wstest") {
     sendMsgToAll("wstest", { color: "blue" });
     actionInput.value = "";
     return;
   } else {
     value = "Invalid Command";
+    player_stats.user.World_Chaos_Level--;
+    updatePlayerStats();
   }
+  player_stats.user.World_Chaos_Level++;
   p.innerText = value;
 
   updatePlayerStats();
@@ -749,7 +845,14 @@ const Combat = () => {
   combatDiv.style.display = "flex";
   inCombat = true;
   player_stats.ap_current = player_stats.ap_max;
-  fetch("http://localhost:3001/Mobs")
+  fetch("http://localhost:3001/Mobs", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
     .then((response) => response.json())
     .then((data) => {
       enemyGeneration(data);
@@ -809,7 +912,9 @@ const Magic1 = () => {
 const Magic2 = () => {
   if (!checkTurn()) return;
   if (player_stats.mana_current > 15) {
-    inflictDamage("Enemy", 30);
+    randomComponent = 0.75 + ((Math.random() * 5) / 10);
+    damage = Math.floor((20 + (player_stats.character_level_current * 10)) * randomComponent);
+    inflictDamage("Enemy", damage);
     player_stats.mana_current -= 15;
     player_stats.ap_current -= 1;
 
@@ -875,8 +980,6 @@ const Run = () => {
 // Investigate Function
 const Investigate = () => {
   if (!checkTurn()) return;
-  player_stats.ap_current -= 1;
-
   const data = document.createElement("p");
   data.innerText =
     "Enemy: " +
@@ -905,6 +1008,9 @@ const Consume1 = () => {
   } else {
     player_stats.hp_current += 20;
   }
+  if (inCombat) {
+    player_stats.ap_current--;
+  }
   player_stats.user.Small_H--;
   updatePlayerStats();
   if (player_stats.user.Small_H == 0) {
@@ -921,6 +1027,9 @@ const Consume2 = () => {
     player_stats.hp_current = player_stats.hp_max;
   } else {
     player_stats.hp_current += 50;
+  }
+  if (inCombat) {
+    player_stats.ap_current--;
   }
   player_stats.user.Medium_H--;
   updatePlayerStats();
@@ -939,6 +1048,9 @@ const Consume3 = () => {
   } else {
     player_stats.hp_current += 100;
   }
+  if (inCombat) {
+    player_stats.ap_current--;
+  }
   player_stats.user.Large_H--;
   updatePlayerStats();
   if (player_stats.user.Large_H == 0) {
@@ -955,6 +1067,9 @@ const Consume4 = () => {
     player_stats.mana_current = player_stats.mana_max;
   } else {
     player_stats.mana_current += 10;
+  }
+  if (inCombat) {
+    player_stats.ap_current--;
   }
   player_stats.user.Small_M--;
   updatePlayerStats();
@@ -973,6 +1088,9 @@ const Consume5 = () => {
   } else {
     player_stats.mana_current += 25;
   }
+  if (inCombat) {
+    player_stats.ap_current--;
+  }
   player_stats.user.Medium_M--;
   updatePlayerStats();
   if (player_stats.user.Medium_M == 0) {
@@ -989,6 +1107,9 @@ const Consume6 = () => {
     player_stats.mana_current = player_stats.mana_max;
   } else {
     player_stats.mana_current += 50;
+  }
+  if (inCombat) {
+    player_stats.ap_current--;
   }
   player_stats.user.Large_M--;
   updatePlayerStats();
@@ -1007,26 +1128,31 @@ const calcDamage = (target) => {
   if (target === "Enemy") {
     if (damageMult > 0.95) {
       // Crit
+      damage = (player_stats.strength - enemy_stats.defense);
       if (player_stats.user.Equipment_Weapon != 0) {
-        damage =
-          2 *
-          (player_stats.strength + player_stats.user.Equipment_Weapon.value - enemy_stats.defense);
-      } else {
-        damage = 2 * (player_stats.strength - enemy_stats.defense);
+        damage = damage + + player_stats.user.Equipment_Weapon.value;
       }
+      if (damage < 0) {
+        damage = 1;
+      }
+      damage = damage * 2;
+      const crit = document.createElement("p");
+      crit.innerText = "Critical Hit!";
+      middleDiv.appendChild(crit);
     } else if (damageMult < 0.05) {
       // Miss
+      const miss = document.createElement("p");
+      miss.innerText = "You Missed!";
+      middleDiv.appendChild(miss);
       damage = 0;
     } else {
-      if (player_stats.user.Equipment_Weapon != 0) {
-        damage =
-          player_stats.strength + player_stats.user.Equipment_Weapon.value - enemy_stats.defense;
-      } else {
-        damage = player_stats.strength - enemy_stats.defense;
-      }
-    }
-    if (damage < 0) {
-      damage = 1;
+        damage = (player_stats.strength - enemy_stats.defense);
+        if (player_stats.user.Equipment_Weapon != 0) {
+            damage = damage + + player_stats.user.Equipment_Weapon.value;
+        }
+        if (damage < 0) {
+            damage = 1;
+        }
     }
     damage = Math.ceil(damage * randomComponent);
     inflictDamage("Enemy", damage);
@@ -1035,26 +1161,35 @@ const calcDamage = (target) => {
     player_defense = 0;
 
     if (player_stats.user.Equipment_Head != 0) {
-      player_defense += player_stats.Equipment_Head.value;
+      player_defense += player_stats.user.Equipment_Head.value;
     }
     if (player_stats.user.Equipment_Chest != 0) {
-      player_defense += player_stats.Equipment_Chest.value;
+      player_defense += player_stats.user.Equipment_Chest.value;
     }
     if (player_stats.user.Equipment_Arms != 0) {
-      player_defense += player_stats.Equipment_Arms.value;
+      player_defense += player_stats.user.Equipment_Arms.value;
     }
     if (player_stats.user.Equipment_Legs != 0) {
-      player_defense += player_stats.Equipment_Legs.value;
+      player_defense += player_stats.user.Equipment_Legs.value;
     }
     if (damageMult > 0.95) {
       // Crit
       damage = 2 * (enemy_stats.attack - player_defense);
+      const miss = document.createElement("p");
+      miss.innerText = enemy_stats.name + " landed a Critical Hit!";
+      middleDiv.appendChild(miss);
     }
     if (damageMult < 0.05) {
       // Miss
+      const miss = document.createElement("p");
+      miss.innerText = enemy_stats.name + " Missed!";
+      middleDiv.appendChild(miss);
       damage = 0;
     } else {
       damage = enemy_stats.attack - player_defense;
+      if (damage <= 0) {
+        damage = 1;
+      }
     }
     damage = Math.ceil(damage * randomComponent);
     inflictDamage("Player", damage);
@@ -1095,8 +1230,8 @@ const inflictDamage = (target, damage) => {
 const endCombat = () => {
   player_stats.xp_current += 10;
   player_stats.score += 100;
-  updatePlayerStats();
   Escape();
+  updatePlayerStats();
 };
 
 const playerDeath = () => {
