@@ -149,6 +149,8 @@ let turn = false;
 
 let inCombat = false;
 
+let isBoss = false;
+
 // initialize other UI things
 levelDiv.innerText = `Level: ${player_stats.character_level_current}`;
 chaos.innerText = player_stats.user.World_Chaos_Level;
@@ -198,6 +200,7 @@ const BossCombat = () => {
   legendBox.style.display = "none";
   combatDiv.style.display = "flex";
   inCombat = true;
+  isBoss = true;
   player_stats.ap_current = player_stats.ap_max;
   fetch("http://localhost:3001/Bosses", {
     headers: {
@@ -890,7 +893,11 @@ const Attack = () => {
 // Spell 1 - Heal
 const Magic1 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current > 5) {
+  if (player_stats.hp_current == player_stats.hp_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full health!";
+    middleDiv.appendChild(p);
+  } else if (player_stats.mana_current >= 5) {
     if (player_stats.hp_current + 25 > player_stats.hp_max) {
       player_stats.hp_current = player_stats.hp_max;
     } else {
@@ -911,7 +918,7 @@ const Magic1 = () => {
 // Spell 2 - Fireball
 const Magic2 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current > 15) {
+  if (player_stats.mana_current >= 15) {
     randomComponent = 0.75 + ((Math.random() * 5) / 10);
     damage = Math.floor((20 + (player_stats.character_level_current * 10)) * randomComponent);
     inflictDamage("Enemy", damage);
@@ -930,7 +937,11 @@ const Magic2 = () => {
 // Spell 3 - Invigorate
 const Magic3 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current > 25) {
+  if (player_stats.ap_current == player_stats.ap_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already prepared to Fight!";
+    middleDiv.appendChild(p);
+  } else if (player_stats.mana_current >= 25) {
     player_stats.mana_current -= 25;
     player_stats.ap_current += 1;
 
@@ -946,7 +957,7 @@ const Magic3 = () => {
 // Spell 4 - Escape
 const Magic4 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current > 50) {
+  if (player_stats.mana_current >= 50) {
     player_stats.mana_current -= 50;
     Escape();
 
@@ -1003,121 +1014,163 @@ const Investigate = () => {
 
 const Consume1 = () => {
   if (!checkTurn()) return;
-  if (player_stats.hp_current + 20 > player_stats.hp_max) {
-    player_stats.hp_current = player_stats.hp_max;
-  } else {
-    player_stats.hp_current += 20;
+  if (player_stats.hp_current == player_stats.hp_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full health!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Small_H--;
-  updatePlayerStats();
-  if (player_stats.user.Small_H == 0) {
-    currConsumable = document.querySelectorAll("#health-s");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.hp_current + 20 > player_stats.hp_max) {
+      player_stats.hp_current = player_stats.hp_max;
+    } else {
+      player_stats.hp_current += 20;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Small_H--;
+    updatePlayerStats();
+    if (player_stats.user.Small_H == 0) {
+      currConsumable = document.querySelectorAll("#health-s");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
 const Consume2 = () => {
   if (!checkTurn()) return;
-  if (player_stats.hp_current + 50 > player_stats.hp_max) {
-    player_stats.hp_current = player_stats.hp_max;
-  } else {
-    player_stats.hp_current += 50;
+  if (player_stats.hp_current == player_stats.hp_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full health!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Medium_H--;
-  updatePlayerStats();
-  if (player_stats.user.Medium_H == 0) {
-    currConsumable = document.querySelectorAll("#health-m");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.hp_current + 50 > player_stats.hp_max) {
+      player_stats.hp_current = player_stats.hp_max;
+    } else {
+      player_stats.hp_current += 50;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Medium_H--;
+    updatePlayerStats();
+    if (player_stats.user.Medium_H == 0) {
+      currConsumable = document.querySelectorAll("#health-m");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
 const Consume3 = () => {
   if (!checkTurn()) return;
-  if (player_stats.hp_current + 100 > player_stats.hp_max) {
-    player_stats.hp_current = player_stats.hp_max;
-  } else {
-    player_stats.hp_current += 100;
+  if (player_stats.hp_current == player_stats.hp_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full health!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Large_H--;
-  updatePlayerStats();
-  if (player_stats.user.Large_H == 0) {
-    currConsumable = document.querySelectorAll("#health-l");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.hp_current + 100 > player_stats.hp_max) {
+      player_stats.hp_current = player_stats.hp_max;
+    } else {
+      player_stats.hp_current += 100;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Large_H--;
+    updatePlayerStats();
+    if (player_stats.user.Large_H == 0) {
+      currConsumable = document.querySelectorAll("#health-l");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
 const Consume4 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current + 10 > player_stats.mana_max) {
-    player_stats.mana_current = player_stats.mana_max;
-  } else {
-    player_stats.mana_current += 10;
+  if (player_stats.mana_current == player_stats.mana_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full mana!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Small_M--;
-  updatePlayerStats();
-  if (player_stats.user.Small_M == 0) {
-    currConsumable = document.querySelectorAll("#mana-s");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.mana_current + 10 > player_stats.mana_max) {
+      player_stats.mana_current = player_stats.mana_max;
+    } else {
+      player_stats.mana_current += 10;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Small_M--;
+    updatePlayerStats();
+    if (player_stats.user.Small_M == 0) {
+      currConsumable = document.querySelectorAll("#mana-s");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
 const Consume5 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current + 25 > player_stats.mana_max) {
-    player_stats.mana_current = player_stats.mana_max;
-  } else {
-    player_stats.mana_current += 25;
+  if (player_stats.mana_current == player_stats.mana_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full mana!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Medium_M--;
-  updatePlayerStats();
-  if (player_stats.user.Medium_M == 0) {
-    currConsumable = document.querySelectorAll("#mana-m");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.mana_current + 25 > player_stats.mana_max) {
+      player_stats.mana_current = player_stats.mana_max;
+    } else {
+      player_stats.mana_current += 25;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Medium_M--;
+    updatePlayerStats();
+    if (player_stats.user.Medium_M == 0) {
+      currConsumable = document.querySelectorAll("#mana-m");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
 const Consume6 = () => {
   if (!checkTurn()) return;
-  if (player_stats.mana_current + 50 > player_stats.mana_max) {
-    player_stats.mana_current = player_stats.mana_max;
-  } else {
-    player_stats.mana_current += 50;
+  if (player_stats.mana_current == player_stats.mana_max) {
+    const p = document.createElement("p");
+    p.innerText = "You are already at full mana!";
+    middleDiv.appendChild(p);
   }
-  if (inCombat) {
-    player_stats.ap_current--;
-  }
-  player_stats.user.Large_M--;
-  updatePlayerStats();
-  if (player_stats.user.Large_M == 0) {
-    currConsumable = document.querySelectorAll("#mana-l");
-    currConsumable.forEach((consumable) => {
-      consumable.style.display = "none";
-    });
+  else {
+    if (player_stats.mana_current + 50 > player_stats.mana_max) {
+      player_stats.mana_current = player_stats.mana_max;
+    } else {
+      player_stats.mana_current += 50;
+    }
+    if (inCombat) {
+      player_stats.ap_current--;
+    }
+    player_stats.user.Large_M--;
+    updatePlayerStats();
+    if (player_stats.user.Large_M == 0) {
+      currConsumable = document.querySelectorAll("#mana-l");
+      currConsumable.forEach((consumable) => {
+        consumable.style.display = "none";
+      });
+    }
   }
 };
 
@@ -1130,9 +1183,9 @@ const calcDamage = (target) => {
       // Crit
       damage = (player_stats.strength - enemy_stats.defense);
       if (player_stats.user.Equipment_Weapon != 0) {
-        damage = damage + + player_stats.user.Equipment_Weapon.value;
+        damage = damage + player_stats.user.Equipment_Weapon.value;
       }
-      if (damage < 0) {
+      if (damage <= 0) {
         damage = 1;
       }
       damage = damage * 2;
@@ -1148,9 +1201,9 @@ const calcDamage = (target) => {
     } else {
         damage = (player_stats.strength - enemy_stats.defense);
         if (player_stats.user.Equipment_Weapon != 0) {
-            damage = damage + + player_stats.user.Equipment_Weapon.value;
+            damage = damage + player_stats.user.Equipment_Weapon.value;
         }
-        if (damage < 0) {
+        if (damage <= 0) {
             damage = 1;
         }
     }
@@ -1230,6 +1283,178 @@ const inflictDamage = (target, damage) => {
 const endCombat = () => {
   player_stats.xp_current += 10;
   player_stats.score += 100;
+
+  if (isBoss) {
+    fetch("http://localhost:3001/Realms", {
+      headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const warp = document.createElement("p");
+        warp.innerText = data.description;
+        middleDiv.appendChild(warp);
+      });
+    fetch("http://localhost:3001/Weapons", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const itemP = document.createElement("p");
+        itemP.innerText = data.name;
+        itemP.style.color = "violet";
+        middleDiv.appendChild(itemP);
+        if (
+          data.id > player_stats.user.Equipment_Weapon.id ||
+          player_stats.user.Equipment_Weapon === 0
+        ) {
+          player_stats.user.Equipment_Weapon = data;
+        }
+      });
+    fetch("http://localhost:3001/Equipment", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const itemP = document.createElement("p");
+        itemP.innerText = data.name;
+        itemP.style.color = "violet";
+        middleDiv.appendChild(itemP);
+        switch (data.position) {
+          case "legs":
+            if (
+              data.id > player_stats.user.Equipment_Legs.id ||
+              player_stats.user.Equipment_Legs === 0
+            ) {
+              player_stats.user.Equipment_Legs = data;
+            }
+            break;
+          case "arms":
+            if (
+              data.id > player_stats.user.Equipment_Arms.id ||
+              player_stats.user.Equipment_Arms === 0
+            ) {
+              player_stats.user.Equipment_Arms = data;
+            }
+            break;
+          case "chest":
+            if (
+              data.id > player_stats.user.Equipment_Chest.id ||
+              player_stats.user.Equipment_Chest === 0
+            ) {
+              player_stats.user.Equipment_Chest = data;
+            }
+            break;
+          case "head":
+            if (
+              data.id > player_stats.user.Equipment_Head.id ||
+              player_stats.user.Equipment_Head === 0
+            ) {
+              player_stats.user.Equipment_Head = data;
+            }
+            break;
+        }
+      });
+    updatePlayerStats();
+  } else {
+    switch (Math.floor(Math.random() * 2) % 2) {
+      case 0:
+        fetch("http://localhost:3001/Weapons", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(player_stats),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const itemP = document.createElement("p");
+            itemP.innerText = data.name;
+            itemP.style.color = "violet";
+            middleDiv.appendChild(itemP);
+            if (
+              data.id > player_stats.user.Equipment_Weapon.id ||
+              player_stats.user.Equipment_Weapon === 0
+            ) {
+              player_stats.user.Equipment_Weapon = data;
+            }
+            value = null;
+          });
+        updatePlayerStats();
+        break;
+    case 1:
+      fetch("http://localhost:3001/Equipment", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(player_stats),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const itemP = document.createElement("p");
+          itemP.innerText = data.name;
+          itemP.style.color = "violet";
+          middleDiv.appendChild(itemP);
+          switch (data.position) {
+            case "legs":
+              if (
+                data.id > player_stats.user.Equipment_Legs.id ||
+                player_stats.user.Equipment_Legs === 0
+              ) {
+                player_stats.user.Equipment_Legs = data;
+              }
+                break;
+            case "arms":
+              if (
+                data.id > player_stats.user.Equipment_Arms.id ||
+                player_stats.user.Equipment_Arms === 0
+              ) {
+                player_stats.user.Equipment_Arms = data;
+              }
+                break;
+            case "chest":
+              if (
+                data.id > player_stats.user.Equipment_Chest.id ||
+                player_stats.user.Equipment_Chest === 0
+              ) {
+                player_stats.user.Equipment_Chest = data;
+              }
+                break;
+            case "head":
+              if (
+                data.id > player_stats.user.Equipment_Head.id ||
+                player_stats.user.Equipment_Head === 0
+              ) {
+                player_stats.user.Equipment_Head = data;
+              }
+                break;
+            }
+            value = null;
+        });
+        updatePlayerStats();
+        break;
+    }
+  }
+
+    
+
   Escape();
   updatePlayerStats();
 };

@@ -245,7 +245,8 @@ app.post("/Equipment", async (req, res) => {
   console.log("Equipment Requested...");
   let info = req.body;
   const collection = mongo.db("db_loot").collection("Equipment");
-  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage + 3, collection);
+  lowestEquipment = info.user.World_Current_Stage + ((info.user.World_Current_Stage - 1) * 4);
+  const item = await getRandomDBItem(lowestEquipment, lowestEquipment + 3, collection);
   res.json(item);
   console.log("Equipment retrieved! " + item.name);
 });
@@ -261,7 +262,7 @@ app.post("/Mobs", async (req, res) => {
   console.log("Mob requested...");
   let info = req.body;
   const collection = mongo.db("db_enemy").collection("mobs");
-  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage + 1, collection);
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage + 2, collection);
   res.json(item);
   console.log(item.description);
 });
@@ -280,7 +281,14 @@ app.get("/Events", async (req, res) => {
   res.json(item);
   console.log(item.description);
 });
-
+app.post("/Realms", async (req, res) => {
+  console.log("Realm requested...");
+  let info = req.body;
+  const collection = mongo.db("db_realms").collection("realms");
+  const item = await getRandomDBItem(info.user.World_Current_Stage, info.user.World_Current_Stage, collection);
+  res.json(item);
+  console.log("Realm retrieved! " + item.name);
+});
 app.post("/signup", async (req, res) => {
   let name = req.body.name;
   let pass = req.body.pass;
