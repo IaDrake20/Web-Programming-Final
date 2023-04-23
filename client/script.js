@@ -36,7 +36,7 @@ const saveButton = document.querySelector("#save-button");
 const legendBox = document.querySelector("#legend");
 
 // attach event listeners
-saveButton.addEventListener("click", () => Save());
+saveButton.addEventListener("click", () => Load()); //hijacking the save button to load for now
 attackButton.addEventListener("click", () => Attack());
 magicButton1.addEventListener("click", () => Magic1());
 magicButton2.addEventListener("click", () => Magic2());
@@ -269,16 +269,18 @@ const Load = async () => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    method: "GET",
-    body: JSON.stringify(myUsername),
-  }).then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error: ${response.status}`);
-        }
-        userData = response.json();
-      })
-      .then((json) => initialize(json))
+    method: "POST",
+    body: JSON.stringify({Username:myUsername}),
+  }).then(async (response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    userData = await response.json();
+  })
       .catch((err) => console.error(`Fetch problem: ${err.message}`));
+
+  //test print to see data
+  console.log("TEST PRINT OF LOADED DATA\n: %j",userData);
 
   //update user data from response
   player_stats.character_level_current = userData.character_level_current;

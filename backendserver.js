@@ -417,16 +417,13 @@ app.post("/updateUser", async (req, res) => {
   let info = req.body;
   const username = info.Username;
   console.log("TEST PRINT USERNAME: "+username);
-  //const pswrd = collection.findOne({Username: username, Password: password});
-  //console.log("Finding "+username+" in db to save data");
   let account = await collection.findOne({ Username: username });
   await collection.replaceOne({Username: username}, info);
   console.log(req.body);
   console.log(info);
-  //await collection.insertOne(info);
 });
 
-app.get("/loadUser", async (req, res) => {
+app.post("/loadUser", async (req, res) => {
   console.log("Fetch recieved, getting player stats from db.");
   const collection = mongo.db("User_Info").collection("user");
   let username = req.body;
