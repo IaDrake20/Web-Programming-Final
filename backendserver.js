@@ -426,6 +426,17 @@ app.post("/updateUser", async (req, res) => {
   //await collection.insertOne(info);
 });
 
+app.get("/loadUser", async (req, res) => {
+  console.log("Fetch recieved, getting player stats from db.");
+  const collection = mongo.db("User_Info").collection("user");
+  let username = req.body;
+  console.log("TEST PRINT USERNAME: "+username);
+  let account = await collection.findOne({Username: username});
+
+  //might need to catch some errors here
+  res.send(account);
+})
+
 // temp
 app.get("/", (req, res) => {
   res.send("Hello backend server");

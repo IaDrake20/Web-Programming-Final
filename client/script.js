@@ -258,6 +258,55 @@ const Save = async () => {
   console.log(content);
 };
 
+const Load = async () => {
+  let userData;
+  //fetch from backend user data
+  const myUsername = player_stats.Username;
+  console.log("Requesting player stats for load");
+
+  const response = await fetch("http://localhost:3001/loadUser", {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+    body: JSON.stringify(myUsername),
+  }).then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+        userData = response.json();
+      })
+      .then((json) => initialize(json))
+      .catch((err) => console.error(`Fetch problem: ${err.message}`));
+
+  //update user data from response
+  player_stats.character_level_current = userData.character_level_current;
+  player_stats.hp_max = userData.hp_max;
+  player_stats.hp_current = userData.hp_current;
+  player_stats.mana_current = userData.mana_current;
+  player_stats.mana_max = userData.mana_max;
+  player_stats.ap_current = userData.ap_current;
+  player_stats.ap_max = userData.ap_max;
+  player_stats.xp_current = userData.xp_current;
+  player_stats.xp_threshold = userData.xp_threshold;
+  player_stats.strength = userData.strength;
+  player_stats.score = userData.score;
+  player_stats.user.Small_H = userData.user.Small_H;
+  player_stats.user.Medium_H = userData.user.Medium_H;
+  player_stats.user.Large_H = userData.user.Large_H;
+  player_stats.user.Small_M = userData.user.Small_M;
+  player_stats.user.Medium_M = userData.user.Medium_M;
+  player_stats.user.Large_M = userData.user.Large_M;
+  player_stats.user.Equipment_Legs = userData.user.Equipment_Legs;
+  player_stats.user.Equipment_Chest = userData.user.Equipment_Chest;
+  player_stats.user.Equipment_Arms = userData.user.Equipment_Arms;
+  player_stats.user.Equipment_Head = userData.user.Equipment_Head;
+  player_stats.user.Equipment_Weapon = userData.user.Equipment_Weapon;
+  player_stats.user.World_Current_Stage = userData.user.World_Current_Stage;
+  player_stats.user.World_Chaos_Level = userData.user.World_Chaos_Level;
+}
+
 const handleInput = (event) => {
   event.preventDefault();
 
