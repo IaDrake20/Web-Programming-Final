@@ -1631,6 +1631,7 @@ const receiveMessage = (msg) => {
     // initial message received from server, initializes turn
     case "init":
       receiveInitMsg(body);
+      endTurn();
       break;
 
     // msg received when a player ends their turn
