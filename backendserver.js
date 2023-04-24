@@ -427,8 +427,7 @@ app.post("/loadUser", async (req, res) => {
   console.log("Fetch recieved, getting player stats from db.");
   const collection = mongo.db("User_Info").collection("user");
   let username = req.body;
-  console.log("TEST PRINT USERNAME: "+username);
-  let account = await collection.findOne({Username: username});
+  let account = await collection.findOne(username);
 
   //might need to catch some errors here
   res.send(account);
